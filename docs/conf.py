@@ -46,6 +46,7 @@ html_theme_options = {
 }
 
 html_static_path = ["_static"]
+html_css_files = ["custom.css"]
 html_title = "Med-SEAL Suite Documentation"
 html_baseurl = "https://igoyai.github.io/Med-SEAL-docs/"
 
