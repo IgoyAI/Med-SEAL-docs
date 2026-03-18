@@ -52,3 +52,30 @@ standards
 fhir-resources
 contributing
 ```
+
+```{toctree}
+:maxdepth: 2
+:caption: User Guide
+
+user-guide/index
+user-guide/login-sso
+user-guide/patient-portal
+user-guide/openemr-clinician
+user-guide/ai-chat
+user-guide/medications
+user-guide/appointments
+user-guide/vitals
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Developer Guide
+
+developer-guide/index
+developer-guide/environment-setup
+developer-guide/fhir-data-model
+developer-guide/api-reference
+developer-guide/adding-ai-features
+developer-guide/testing
+developer-guide/extending-openemr
+```
