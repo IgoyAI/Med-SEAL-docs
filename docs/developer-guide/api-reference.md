@@ -4,6 +4,53 @@ The **AI Service** exposes a REST API on port `4003`. All endpoints (except `/he
 
 ---
 
+## Request Lifecycle (Sequence Diagram)
+
+The following diagram shows the end-to-end lifecycle of a clinical query through the AI Service, required for IT audit request traceability.
+
+```{uml}
+@startuml
+actor "Patient" as Patient
+participant "Patient Portal" as App
+participant "AI Service\n:4003" as API
+participant "SEA-LION Guard" as Guard
+participant "Orchestrator" as Orch
+participant "Agent (A1-A6)" as Agent
+participant "LLM\n(med-r1)" as LLM
+database "Medplum\n(FHIR R4)" as FHIR
+database "Audit Log" as Audit
+
+Patient -> App : Sends message
+App -> API : POST /chat\n{patientId, message}
+
+API -> Audit : Log request\n(AuditEvent)
+
+API -> Guard : checkInput(message)
+Guard --> API : PASS
+
+API -> Orch : classify(message)
+Orch --> API : intent = "medical_query"
+
+API -> Agent : process(input)
+Agent -> FHIR : Search Condition,\nMedicationRequest,\nObservation
+FHIR --> Agent : FHIR Bundle
+Agent -> LLM : Prompt\n(de-identified context)
+LLM --> Agent : Raw response
+
+Agent --> API : AgentOutput
+
+API -> Guard : checkOutput(response)
+Guard --> API : PASS
+
+API -> Audit : Log response\n(AuditEvent)
+
+API --> App : 200 {reply, agentsUsed,\nguardDecision}
+App --> Patient : Display response
+@enduml
+```
+
+---
+
 ## Base URL
 
 ```

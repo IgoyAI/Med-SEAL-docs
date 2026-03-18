@@ -15,6 +15,96 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 | SYS | **SEA-LION Guard** | SEA-LION Guard | System-wide |
 | SYS | **smolagents Orchestrator** | Rule-based router | System-wide |
 
+### Agent Class Diagram
+
+```{uml}
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+abstract class BaseAgent {
+  agentId : string
+  model : string
+  --
+  +process(input: AgentInput): AgentOutput
+  +readFHIR(query: FHIRQuery): Bundle
+}
+
+class CompanionAgent {
+  language : string
+  --
+  +chat(message, patientId): Reply
+  +rephrase(technicalText): string
+  +deliverPRO(questionnaire): Response
+}
+
+class ClinicalReasoningAgent {
+  --
+  +analyse(conditions, meds, obs): ClinicalResponse
+  +checkInteractions(meds): Warning[]
+}
+
+class NudgeAgent {
+  ruleEngine : RuleEngine
+  --
+  +evaluate(triggers): Nudge[]
+  +escalate(severity, patientId): Alert
+}
+
+class LifestyleAgent {
+  nutritionKB : KnowledgeBase
+  --
+  +recommend(diet, conditions): Advice
+  +checkFoodInteractions(meds, food): Warning[]
+}
+
+class InsightSynthesisAgent {
+  lookbackDays : number
+  --
+  +generateBrief(patientId): Composition
+  +synthesise(adherence, biometrics, PROs): Summary
+}
+
+class MeasurementAgent {
+  --
+  +computePDC(meds, admin): number
+  +computeTrends(observations): TrendData
+  +generateMeasureReport(): MeasureReport
+}
+
+class SEALIONGuard {
+  --
+  +checkInput(content): GuardDecision
+  +checkOutput(content): GuardDecision
+  +redactPII(text): string
+}
+
+class Orchestrator {
+  --
+  +classify(message): Intent
+  +route(intent): BaseAgent
+}
+
+enum GuardDecision {
+  PASS
+  FLAG
+  ESCALATE
+  BLOCK
+}
+
+BaseAgent <|-- CompanionAgent : A1
+BaseAgent <|-- ClinicalReasoningAgent : A2
+BaseAgent <|-- NudgeAgent : A3
+BaseAgent <|-- LifestyleAgent : A4
+BaseAgent <|-- InsightSynthesisAgent : A5
+BaseAgent <|-- MeasurementAgent : A6
+
+Orchestrator --> BaseAgent : routes to
+SEALIONGuard --> BaseAgent : wraps
+SEALIONGuard ..> GuardDecision : returns
+@enduml
+```
+
 ## Agent Descriptions
 
 ### A1  - Companion Agent

@@ -23,6 +23,112 @@ The Med-SEAL Suite uses **HL7 FHIR R4** as its canonical data standard. All clin
 | `MeasureReport` | Population and individual adherence metrics |
 | `QuestionnaireResponse` | PRO (Patient-Reported Outcome) submissions |
 
+### FHIR Domain Model (Class Diagram)
+
+```{uml}
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+class Patient {
+  id : string
+  name : HumanName[]
+  birthDate : date
+  gender : code
+  telecom : ContactPoint[]
+  --
+  <<PHI - Restricted>>
+}
+
+class Practitioner {
+  id : string
+  name : HumanName[]
+  qualification : code[]
+}
+
+class Encounter {
+  id : string
+  status : code
+  class : Coding
+  period : Period
+  reasonCode : CodeableConcept[]
+}
+
+class Condition {
+  id : string
+  clinicalStatus : code
+  code : CodeableConcept
+  onsetDateTime : dateTime
+}
+
+class MedicationRequest {
+  id : string
+  status : code
+  medicationCodeableConcept : CodeableConcept
+  dosageInstruction : Dosage[]
+}
+
+class MedicationAdministration {
+  id : string
+  status : code
+  effectiveDateTime : dateTime
+}
+
+class Observation {
+  id : string
+  status : code
+  category : CodeableConcept[]
+  code : CodeableConcept
+  valueQuantity : Quantity
+  effectiveDateTime : dateTime
+}
+
+class Appointment {
+  id : string
+  status : code
+  start : instant
+  end : instant
+  appointmentType : CodeableConcept
+}
+
+class Composition {
+  id : string
+  status : code
+  type : CodeableConcept
+  date : dateTime
+  section : Section[]
+  --
+  <<AI-generated tag>>
+}
+
+class MeasureReport {
+  id : string
+  status : code
+  type : code
+  period : Period
+  group : Group[]
+}
+
+Patient "1" --> "0..*" Encounter : subject
+Patient "1" --> "0..*" Condition : subject
+Patient "1" --> "0..*" MedicationRequest : subject
+Patient "1" --> "0..*" Observation : subject
+Patient "1" --> "0..*" Appointment : participant
+Patient "1" --> "0..*" Composition : subject
+
+Encounter "1" --> "0..*" Condition : context
+Encounter "1" --> "0..*" Observation : encounter
+Encounter "1" --> "1" Practitioner : participant
+
+MedicationRequest "1" --> "0..*" MedicationAdministration : request
+MedicationRequest "1" --> "1" Practitioner : requester
+
+Composition "1" --> "0..*" MeasureReport : references
+
+Appointment "0..*" --> "1" Practitioner : participant
+@enduml
+```
+
 ---
 
 ## Reading FHIR Data

@@ -13,18 +13,110 @@ The SSO system ensures that:
 
 ## Architecture
 
+```{uml}
+@startuml
+skinparam componentStyle uml2
+
+component "AI Frontend\n(Admin Panel)" as AIUI
+component "AI Service\n/api/auth/*" as AISvc
+
+database "SSO DB\n(PostgreSQL)" as SSODB
+database "OpenEMR DB\n(MariaDB)" as OEDB
+database "Medplum\n(FHIR)" as FHIR
+
+AIUI --> AISvc
+AISvc --> SSODB
+AISvc --> OEDB : user sync
+AISvc --> FHIR : Practitioner sync
+@enduml
 ```
-┌────────────────────┐      ┌─────────────────┐
-│   AI Frontend      │─────▶│   AI Service     │
-│   (Admin Panel)    │      │   /api/auth/*    │
-└────────────────────┘      └────────┬────────┘
-                                     │
-                    ┌────────────────┼────────────────┐
-                    ▼                ▼                ▼
-           ┌──────────────┐  ┌─────────────┐  ┌────────────┐
-           │  SSO DB       │  │  OpenEMR DB  │  │  Medplum   │
-           │  (Postgres)   │  │  (MariaDB)   │  │  (FHIR)    │
-           └──────────────┘  └─────────────┘  └────────────┘
+
+### Entity-Relationship Diagram
+
+```{uml}
+@startuml
+skinparam linetype ortho
+hide circle
+
+entity "sso.users" as SSOUser {
+  * id : SERIAL <<PK>>
+  --
+  * username : VARCHAR(64) <<UNIQUE>>
+  * password_hash : VARCHAR(255)
+  * role : VARCHAR(32)
+  full_name : VARCHAR(128)
+  email : VARCHAR(128)
+  facility_id : INTEGER <<FK>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "openemr.users" as OEUser {
+  * id : BIGINT <<PK>>
+  --
+  * username : VARCHAR(255) <<UNIQUE>>
+  * password : VARCHAR(255)
+  abook_type : VARCHAR(30)
+  authorized : TINYINT
+  facility_id : INT
+}
+
+entity "openemr.users_secure" as OESecure {
+  * id : BIGINT <<PK>>
+  --
+  * username : VARCHAR(255) <<UNIQUE>>
+  * password : VARCHAR(255)
+  last_update_password : DATETIME
+}
+
+entity "openemr.facility" as Facility {
+  * id : INT <<PK>>
+  --
+  * name : VARCHAR(255)
+  phone : VARCHAR(30)
+  street : VARCHAR(255)
+  city : VARCHAR(255)
+}
+
+SSOUser ||--o{ OEUser : "sync (username)"
+SSOUser ||--o{ OESecure : "sync (password)"
+SSOUser }o--|| Facility : "facility_id"
+OEUser }o--|| Facility : "facility_id"
+@enduml
+```
+
+### Authentication Flow (Sequence Diagram)
+
+```{uml}
+@startuml
+actor "User" as User
+participant "Client App" as Client
+participant "AI Service\n(/api/auth)" as Auth
+database "SSO DB" as SSODB
+database "OpenEMR DB" as OEDB
+
+User -> Client : Enter credentials
+Client -> Auth : POST /api/auth/login\n{username, password}
+Auth -> SSODB : SELECT user\nWHERE username = ?
+SSODB --> Auth : user record
+
+alt Password matches (bcrypt verify)
+  Auth -> Auth : Generate session token
+  Auth -> OEDB : Sync user record\n(if changed)
+  OEDB --> Auth : OK
+  Auth --> Client : 200 {token, user, role}
+  Client --> User : Login success
+else Password mismatch
+  Auth --> Client : 401 Unauthorized
+  Client --> User : Invalid credentials
+end
+
+note over Auth, SSODB
+  Session tokens expire after 60 min.
+  Failed attempts are logged as
+  AuditEvent resources.
+end note
+@enduml
 ```
 
 ## SSO Database
