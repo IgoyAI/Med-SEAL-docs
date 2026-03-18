@@ -4,32 +4,31 @@ Med-SEAL Suite is a multi-layer healthcare platform where each layer handles a d
 
 ## System Layers
 
-```{mermaid}
-flowchart TD
-    subgraph PatientLayer [Patient-Facing Layer]
-        PortalApp["Patient Portal Native (Expo / React Native)<br/>iOS & Android - vitals, meds, appointments, chat"]
-    end
+```{uml}
+@startuml
+skinparam componentStyle uml2
 
-    subgraph AILayer [AI & Services Layer]
-        direction LR
-        AIService["AI Service (Node/TS)<br/>6 agents · 18 features<br/>LLM orchestration<br/>Port 4003"]
-        SSO["SSO Service<br/>Unified auth<br/>OpenEMR sync<br/>Postgres-backed"]
-    end
+package "Patient-Facing Layer" as PatientLayer {
+  component "Patient Portal Native (Expo / React Native)\n//iOS & Android - vitals, meds, appointments, chat//" as PortalApp
+}
 
-    subgraph DataLayer [Data & Interoperability Layer]
-        Medplum["Medplum (FHIR R4 API)<br/>FHIR store · Subscriptions · Terminology<br/>API: port 8103 · Admin UI: port 3000"]
-    end
+package "AI & Services Layer" as AILayer {
+  component "AI Service (Node/TS)\n//6 agents · 18 features//\n//LLM orchestration//\n//Port 4003//" as AIService
+  component "SSO Service\n//Unified auth//\n//OpenEMR sync//\n//Postgres-backed//" as SSO
+}
 
-    subgraph ClinicalLayer [Clinical EMR Layer]
-        OpenEMR["OpenEMR v7.0.2<br/>Patient records · Orders · Billing · Scheduling<br/>Web UI: port 8081 (HTTP) / 8080 (HTTPS)"]
-    end
+package "Data & Interoperability Layer" as DataLayer {
+  component "Medplum (FHIR R4 API)\n//FHIR store · Subscriptions · Terminology//\n//API: port 8103 · Admin UI: port 3000//" as Medplum
+}
 
-    PatientLayer -- "FHIR R4 / REST" --> AILayer
-    AILayer -- "FHIR R4 / SQL" --> DataLayer
-    DataLayer -- "HL7 / SQL" --> ClinicalLayer
+package "Clinical EMR Layer" as ClinicalLayer {
+  component "OpenEMR v7.0.2\n//Patient records · Orders · Billing · Scheduling//\n//Web UI: port 8081 (HTTP) / 8080 (HTTPS)//" as OpenEMR
+}
 
-    classDef layerBox fill:transparent,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5;
-    class PatientLayer,AILayer,DataLayer,ClinicalLayer layerBox;
+PatientLayer ..> AILayer : FHIR R4 / REST
+AILayer ..> DataLayer : FHIR R4 / SQL
+DataLayer ..> ClinicalLayer : HL7 / SQL
+@enduml
 ```
 
 ## Data Flow

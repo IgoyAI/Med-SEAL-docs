@@ -11,8 +11,10 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx.ext.autosectionlabel",
-    "sphinxcontrib.mermaid",
+    "sphinxcontrib.plantuml",
 ]
+
+plantuml_output_format = "svg"
 
 # MyST Markdown settings
 myst_enable_extensions = [

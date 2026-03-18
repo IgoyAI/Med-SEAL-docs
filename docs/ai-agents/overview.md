@@ -39,23 +39,34 @@ A **non-LLM analytics engine** that computes clinical metrics: medication adhere
 
 The **smolagents Orchestrator** classifies incoming requests and routes them:
 
-```{mermaid}
-flowchart LR
-    Message(["Patient message"]) --> Guard{"SEA-LION Guard<br/>(input validation)"}
-    Guard --> Orchestrator{"Orchestrator<br/>(intent classification)"}
-    
-    Orchestrator -- "casual / general health" --> A1["A1 (Companion)"]
-    
-    Orchestrator -- "medical query" --> A2["A2 (Clinical Reasoning)"]
-    A2 -.->|rephrase| A1
-    
-    Orchestrator -- "dietary / lifestyle" --> A4["A4 (Lifestyle)"]
-    A4 -.->|rephrase| A1
-    
-    Orchestrator -- "PRO questionnaire" --> A1
-    
-    Orchestrator -- "escalation" --> A3["A3 (Nudge)"]
-    A3 --> Alert(["clinician alert"])
+```{uml}
+@startuml
+skinparam handwritten false
+
+rectangle "Patient message" as Message
+hexagon "SEA-LION Guard\n//(input validation)//" as Guard
+hexagon "Orchestrator\n//(intent classification)//" as Orchestrator
+
+rectangle "A1 (Companion)" as A1
+rectangle "A2 (Clinical Reasoning)" as A2
+rectangle "A4 (Lifestyle)" as A4
+rectangle "A3 (Nudge)" as A3
+rectangle "clinician alert" as Alert
+
+Message --> Guard
+Guard --> Orchestrator
+
+Orchestrator --> A1 : casual / general health
+Orchestrator --> A2 : medical query
+Orchestrator --> A4 : dietary / lifestyle
+Orchestrator --> A1 : PRO questionnaire
+Orchestrator --> A3 : escalation
+
+A2 ..> A1 : rephrase
+A4 ..> A1 : rephrase
+
+A3 --> Alert
+@enduml
 ```
 
 ## SEA-LION Guard
