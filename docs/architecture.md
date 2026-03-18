@@ -4,38 +4,32 @@ Med-SEAL Suite is a multi-layer healthcare platform where each layer handles a d
 
 ## System Layers
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Patient-Facing Layer                      │
-│                                                             │
-│   Patient Portal Native (Expo / React Native)            │
-│      iOS & Android  - vitals, meds, appointments, chat       │
-└────────────────────────────┬────────────────────────────────┘
-                             │ FHIR R4 / REST
-┌────────────────────────────▼────────────────────────────────┐
-│                    AI & Services Layer                       │
-│                                                             │
-│   AI Service (Node/TS)        SSO Service             │
-│      6 agents · 18 features        Unified auth             │
-│      LLM orchestration             OpenEMR sync             │
-│      Port 4003                     Postgres-backed          │
-└────────────────────────────┬────────────────────────────────┘
-                             │ FHIR R4 / SQL
-┌────────────────────────────▼────────────────────────────────┐
-│                    Data & Interoperability Layer             │
-│                                                             │
-│   Medplum (FHIR R4 API)                                  │
-│      FHIR store · Subscriptions · Terminology               │
-│      API: port 8103 · Admin UI: port 3000                   │
-└────────────────────────────┬────────────────────────────────┘
-                             │ HL7 / SQL
-┌────────────────────────────▼────────────────────────────────┐
-│                    Clinical EMR Layer                        │
-│                                                             │
-│   OpenEMR v7.0.2                                         │
-│      Patient records · Orders · Billing · Scheduling        │
-│      Web UI: port 8081 (HTTP) / 8080 (HTTPS)                │
-└─────────────────────────────────────────────────────────────┘
+```{mermaid}
+flowchart TD
+    subgraph PatientLayer [Patient-Facing Layer]
+        PortalApp["Patient Portal Native (Expo / React Native)<br/>iOS & Android - vitals, meds, appointments, chat"]
+    end
+
+    subgraph AILayer [AI & Services Layer]
+        direction LR
+        AIService["AI Service (Node/TS)<br/>6 agents · 18 features<br/>LLM orchestration<br/>Port 4003"]
+        SSO["SSO Service<br/>Unified auth<br/>OpenEMR sync<br/>Postgres-backed"]
+    end
+
+    subgraph DataLayer [Data & Interoperability Layer]
+        Medplum["Medplum (FHIR R4 API)<br/>FHIR store · Subscriptions · Terminology<br/>API: port 8103 · Admin UI: port 3000"]
+    end
+
+    subgraph ClinicalLayer [Clinical EMR Layer]
+        OpenEMR["OpenEMR v7.0.2<br/>Patient records · Orders · Billing · Scheduling<br/>Web UI: port 8081 (HTTP) / 8080 (HTTPS)"]
+    end
+
+    PatientLayer -- "FHIR R4 / REST" --> AILayer
+    AILayer -- "FHIR R4 / SQL" --> DataLayer
+    DataLayer -- "HL7 / SQL" --> ClinicalLayer
+
+    classDef layerBox fill:transparent,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5;
+    class PatientLayer,AILayer,DataLayer,ClinicalLayer layerBox;
 ```
 
 ## Data Flow

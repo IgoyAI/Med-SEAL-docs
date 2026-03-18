@@ -39,15 +39,23 @@ A **non-LLM analytics engine** that computes clinical metrics: medication adhere
 
 The **smolagents Orchestrator** classifies incoming requests and routes them:
 
-```
-Patient message
-  └──▶ SEA-LION Guard (input validation)
-       └──▶ Orchestrator (intent classification)
-            ├── casual / general health → A1 (Companion)
-            ├── medical query → A2 (Clinical Reasoning) → A1 (rephrase)
-            ├── dietary / lifestyle → A4 (Lifestyle) → A1 (rephrase)
-            ├── PRO questionnaire → A1 (conversational delivery)
-            └── escalation → A3 (Nudge) → clinician alert
+```{mermaid}
+flowchart LR
+    Message(["Patient message"]) --> Guard{"SEA-LION Guard<br/>(input validation)"}
+    Guard --> Orchestrator{"Orchestrator<br/>(intent classification)"}
+    
+    Orchestrator -- "casual / general health" --> A1["A1 (Companion)"]
+    
+    Orchestrator -- "medical query" --> A2["A2 (Clinical Reasoning)"]
+    A2 -.->|rephrase| A1
+    
+    Orchestrator -- "dietary / lifestyle" --> A4["A4 (Lifestyle)"]
+    A4 -.->|rephrase| A1
+    
+    Orchestrator -- "PRO questionnaire" --> A1
+    
+    Orchestrator -- "escalation" --> A3["A3 (Nudge)"]
+    A3 --> Alert(["clinician alert"])
 ```
 
 ## SEA-LION Guard

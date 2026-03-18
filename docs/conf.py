@@ -11,6 +11,7 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx.ext.autosectionlabel",
+    "sphinxcontrib.mermaid",
 ]
 
 # MyST Markdown settings
