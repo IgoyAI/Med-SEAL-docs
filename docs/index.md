@@ -40,6 +40,7 @@ components/sso
 
 ai-agents/overview
 ai-agents/clinical-agent
+ai-agents/azure-deployment
 ai-agents/features
 technical-report-v1
 ```
