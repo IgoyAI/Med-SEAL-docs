@@ -6,14 +6,17 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 
 | ID | Agent | Model | Surface |
 |---|---|---|---|
+| **V1** | **Med-SEAL V1 Clinical Agent** | `med-r1` / ChatGPT *(demo)* | Both |
 | A1 | **Companion Agent** | MERaLiON + SEA-LION | Patient app |
 | A2 | **Clinical Reasoning Agent** | Qwen3-VL-8B (Med-SEAL) | Both |
 | A3 | **Nudge Agent** | MERaLiON + rule engine | Patient app |
 | A4 | **Lifestyle Agent** | SEA-LION + nutrition KB | Patient app |
-| A5 | **Insight Synthesis Agent** | Qwen3-VL-8B (Med-SEAL) | OpenEMR |
+| A5 | **Insight Synthesis Agent** | Qwen3-VL-8B (Med-SEAL) | Both |
 | A6 | **Measurement Agent** | Analytics engine (no LLM) | Both |
 | SYS | **SEA-LION Guard** | SEA-LION Guard | System-wide |
 | SYS | **smolagents Orchestrator** | Rule-based router | System-wide |
+
+> **⚠️ Demo Note:** The **Med-SEAL V1 Clinical Agent** is the first-generation clinical agent and is **not live-deployed** in the demo environment due to infrastructure constraints (no dedicated GPU inference server). Its role in the interactive demo is fulfilled by **ChatGPT**. See {doc}`clinical-agent` for full details.
 
 ### Agent Class Diagram
 
@@ -106,6 +109,11 @@ SEALIONGuard ..> GuardDecision : returns
 ```
 
 ## Agent Descriptions
+
+### V1 — Med-SEAL V1 Clinical Agent
+The **first-generation clinical agent** for Med-SEAL. A single fine-tuned model (`med-r1`, Qwen3-VL-8B) that consolidates clinical reasoning and insight synthesis. It reads FHIR patient data, answers clinical questions, checks drug interactions, and generates pre-visit briefs. In the V2 multi-agent design its responsibilities are split across A2 and A5.
+
+> **Not deployed in demo** — ChatGPT is used as a substitute. See {doc}`clinical-agent` for architecture details and the infrastructure requirements needed to run V1 in production.
 
 ### A1  - Companion Agent
 The patient's primary conversational interface. Powered by **MERaLiON** for empathetic, culturally-aware dialogue and **SEA-LION** for multilingual support (English, Chinese, Malay, Tamil). Delegates complex queries to specialised agents and rephrases technical responses in patient-friendly language.
