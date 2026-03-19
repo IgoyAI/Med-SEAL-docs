@@ -20,6 +20,7 @@ Med-SEAL Suite integrates clinical EMR, FHIR-based interoperability, patient-fac
 :maxdepth: 2
 :caption: Overview
 
+demo
 architecture
 getting-started
 ```
@@ -50,6 +51,7 @@ technical-report-v1
 :caption: Operations & Reference
 
 deployment
+gke-deployment
 scripts
 standards
 fhir-resources
