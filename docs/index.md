@@ -39,7 +39,9 @@ components/sso
 :caption: AI Platform
 
 ai-agents/overview
+ai-agents/clinical-agent
 ai-agents/features
+technical-report-v1
 ```
 
 ```{toctree}
