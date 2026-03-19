@@ -6,7 +6,7 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 
 | ID | Agent | Model | Surface |
 |---|---|---|---|
-| **V1** | **Med-SEAL V1 Clinical Agent** | `med-r1` / ChatGPT *(demo)* | Both |
+| **V1** | **Med-SEAL V1 (Base Model)** | `med-r1` (Qwen3-VL-8B fine-tuned) / ChatGPT *(demo)* | Both |
 | A1 | **Companion Agent** | MERaLiON + SEA-LION | Patient app |
 | A2 | **Clinical Reasoning Agent** | Qwen3-VL-8B (Med-SEAL) | Both |
 | A3 | **Nudge Agent** | MERaLiON + rule engine | Patient app |
@@ -16,7 +16,7 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 | SYS | **SEA-LION Guard** | SEA-LION Guard | System-wide |
 | SYS | **smolagents Orchestrator** | Rule-based router | System-wide |
 
-> **⚠️ Demo Note:** The **Med-SEAL V1 Clinical Agent** is the first-generation clinical agent and is **not live-deployed** in the demo environment due to infrastructure constraints (no dedicated GPU inference server). Its role in the interactive demo is fulfilled by **ChatGPT**. See {doc}`clinical-agent` for full details.
+> **⚠️ Demo Note:** **Med-SEAL V1** (`med-r1`) is the fine-tuned base model powering clinical reasoning. It is **not deployed** in the demo (no GPU infrastructure). **ChatGPT** is used as a substitute. See {doc}`clinical-agent` for details.
 
 ### Agent Class Diagram
 
@@ -110,10 +110,10 @@ SEALIONGuard ..> GuardDecision : returns
 
 ## Agent Descriptions
 
-### V1 — Med-SEAL V1 Clinical Agent
-The **first-generation clinical agent** for Med-SEAL. A single fine-tuned model (`med-r1`, Qwen3-VL-8B) that consolidates clinical reasoning and insight synthesis. It reads FHIR patient data, answers clinical questions, checks drug interactions, and generates pre-visit briefs. In the V2 multi-agent design its responsibilities are split across A2 and A5.
+### V1 — Med-SEAL V1 (Base Model)
+**`med-r1`** is the fine-tuned base model (Qwen3-VL-8B-Thinking) that serves as the clinical reasoning backbone. It is purely the LLM — not an agent. Agents **A2** and **A5** call this model for clinical reasoning and pre-visit brief generation respectively.
 
-> **Not deployed in demo** — ChatGPT is used as a substitute. See {doc}`clinical-agent` for architecture details and the infrastructure requirements needed to run V1 in production.
+> **Not deployed in demo** — ChatGPT is used as a substitute. No code changes needed to switch; only environment variables. See {doc}`clinical-agent` for full model card and technical details.
 
 ### A1  - Companion Agent
 The patient's primary conversational interface. Powered by **MERaLiON** for empathetic, culturally-aware dialogue and **SEA-LION** for multilingual support (English, Chinese, Malay, Tamil). Delegates complex queries to specialised agents and rephrases technical responses in patient-friendly language.

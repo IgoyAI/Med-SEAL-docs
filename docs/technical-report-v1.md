@@ -2,212 +2,83 @@
 
 **Version:** 1.0  
 **Date:** March 2026  
-**Status:** Research Prototype — Demo environment active; production deployment pending infrastructure provisioning
-
-> **Demo Disclaimer:** The Med-SEAL V1 AI Agent (`med-r1`) is not deployed in the live demonstration due to the absence of a GPU inference server. All AI-powered clinical interactions in the demo are fulfilled by **ChatGPT** (OpenAI API) using an identical prompt architecture, FHIR context injection pipeline, and safety guard layer. No functional changes are required to switch to the production `med-r1` endpoint — only environment variable updates.
+**Status:** Model trained — not deployed in demo (no GPU infrastructure)
 
 ---
 
-## 1. Executive Summary
+## 1. What is Med-SEAL V1?
 
-Med-SEAL (Medical – Systems for Empowerment with AI & Learning) V1 is a **clinical-grade, FHIR-native AI agent platform** designed to empower chronic disease patients in Singapore and Southeast Asia. Built on top of OpenEMR and Medplum, the system delivers 18 smart healthcare features through a multi-agent AI architecture, covering patient engagement, clinical decision support, medication adherence, lifestyle coaching, and proactive care escalation.
+Med-SEAL V1 refers to **`med-r1`**, a **fine-tuned clinical large language model** based on [Qwen3-VL-8B-Thinking](https://huggingface.co/Qwen). It is the foundational AI model purpose-built for the Med-SEAL healthcare platform.
 
-The V1 system introduces the **Med-SEAL V1 Clinical Agent** — a fine-tuned large language model (`med-r1`, based on Qwen3-VL-8B) that consolidates clinical reasoning and patient-facing AI into a single architecture, later decomposed into specialised A2/A5 agents in the planned V2 roadmap.
+Med-SEAL V1 is **purely the base model** — not the multi-agent system, not the orchestrator, and not the patient/clinician application stack. The broader Med-SEAL agent architecture (A1–A6, SEA-LION Guard, smolagents) *consumes* this model as its clinical reasoning backbone.
 
-**Key outcomes targeted by V1:**
-
-| Outcome | Metric |
-|---|---|
-| Medication adherence (PDC) | ≥ 80% |
-| Patient-reported outcomes collected | ≥ 1 per patient per 2 weeks |
-| Clinician pre-visit brief delivery | ≥ 30 min before appointment |
-| Clinical escalation latency | < 5 min from trigger |
-| Safety guard block rate (inappropriate output) | < 0.1% of interactions |
+> **Demo Note:** Med-SEAL V1 (`med-r1`) is **not deployed** in the live demonstration due to the absence of GPU inference infrastructure. In the demo, its role is fulfilled by **ChatGPT** (OpenAI API) using the same prompt architecture and FHIR context pipeline. Switching to `med-r1` in production requires only environment variable changes — no code changes.
 
 ---
 
-## 2. System Architecture
-
-### 2.1 Layer Model
-
-Med-SEAL V1 is organised into four distinct layers:
-
-```
-┌─────────────────────────────────────────────────────┐
-│           Patient-Facing Layer                      │
-│   Expo / React Native (iOS & Android)               │
-└────────────────────┬────────────────────────────────┘
-                     │ REST / HTTPS
-┌────────────────────▼────────────────────────────────┐
-│           AI & Services Layer                       │
-│   AI Service (Node.js/TypeScript, Port 4003)        │
-│   6 agents · 18 features · LLM orchestration        │
-│   SSO Service (PostgreSQL-backed, unified auth)     │
-└────────────┬───────────────────────────┬────────────┘
-             │ FHIR R4                   │ SQL (sync)
-┌────────────▼──────────┐   ┌────────────▼────────────┐
-│  Data & Interop Layer │   │  Clinical EMR Layer     │
-│  Medplum Server:8103  │◄──►  OpenEMR 7.0.2          │
-│  FHIR R4 API          │   │  Orders · Billing       │
-│  PostgreSQL 16        │   │  Scheduling · Records   │
-└───────────────────────┘   └─────────────────────────┘
-```
-
-### 2.2 Technology Stack
-
-| Layer | Technology | Standards |
-|---|---|---|
-| Clinical EMR | OpenEMR 7.0.2 | ICD-10, SNOMED CT, HL7 v2 |
-| FHIR API | Medplum Server + App | HL7 FHIR R4 |
-| AI Backend | Node.js / TypeScript | REST, WebSocket |
-| AI Models | `med-r1` (Qwen3-VL-8B, fine-tuned) / ChatGPT *(demo)* | — |
-| Patient App | Expo / React Native | — |
-| Auth | PostgreSQL + custom SSO | SMART on FHIR, OAuth 2.0 |
-| Container Infra | Docker Compose | — |
-
-### 2.3 Network Topology
-
-All services run on the `medseal-net` Docker bridge network:
-
-| Port | Service |
-|---|---|
-| `3000` | Medplum Admin App |
-| `4003` | AI Service API |
-| `5433` | Medplum PostgreSQL |
-| `5434` | SSO PostgreSQL |
-| `8080` | OpenEMR (HTTPS) |
-| `8081` | OpenEMR (HTTP) |
-| `8103` | Medplum FHIR API |
-
----
-
-## 3. AI Agent Architecture
-
-### 3.1 Multi-Agent Roster
-
-| ID | Agent | Model | Surface | LLM |
-|---|---|---|---|---|
-| **V1** | **Med-SEAL V1 Clinical Agent** | `med-r1` / ChatGPT *(demo)* | Both | Yes |
-| A1 | Companion Agent | MERaLiON + SEA-LION | Patient app | Yes |
-| A2 | Clinical Reasoning Agent | Qwen3-VL-8B (Med-SEAL) | Both | Yes |
-| A3 | Nudge Agent | MERaLiON + rule engine | Patient app | Yes |
-| A4 | Lifestyle Agent | SEA-LION + nutrition KB | Patient app | Yes |
-| A5 | Insight Synthesis Agent | Qwen3-VL-8B (Med-SEAL) | OpenEMR | Yes |
-| A6 | Measurement Agent | Analytics engine (no LLM) | Both | No |
-| G1 | SEA-LION Guard | SEA-LION Guard v1.0 | System-wide | Yes |
-| O1 | smolagents Orchestrator | Rule-based router | System-wide | No |
-
-### 3.2 Orchestration Flow
-
-```
-Patient App / OpenEMR
-        │
-SEA-LION Guard (input gate) ── PII redaction, toxicity filter, injection detection
-        │
-smolagents Orchestrator ── intent classification (rule-based, no LLM)
-     /  │  │  │  │  \
-   A1  A2  A3  A4  A5  A6
-     \  │  │  │  │  /
-SEA-LION Guard (output gate) ── FHIR validation, hallucination check, harm filter
-        │
-  Medplum FHIR R4 ──► OpenEMR sync
-```
-
-### 3.3 Model Serving (Production Target)
-
-| Model | Framework | Endpoint | GPU |
-|---|---|---|---|
-| MERaLiON | vLLM | `http://meralion.medseal.internal:8000/v1` | 1× H200 |
-| SEA-LION (chat) | vLLM | `http://sealion.medseal.internal:8000/v1` | 1× H200 |
-| SEA-LION Guard | vLLM | `http://guard.medseal.internal:8000/v1` | 1× H200 |
-| Qwen3-VL-8B (`med-r1`) | vLLM | `http://medseal-vlm.medseal.internal:8000/v1` | 2× H200 |
-
-> **Note:** None of these endpoints are provisioned in the current demo. ChatGPT (`api.openai.com`) is used as the LLM backend for all clinical interactions.
-
----
-
-## 4. Med-SEAL V1 Clinical Agent — Deep Dive
-
-### 4.1 Identity & Configuration
+## 2. Model Card
 
 | Field | Value |
 |---|---|
-| Agent ID | `clinical-reasoning-agent` |
-| FHIR Device ID | `Device/medseal-clinical-agent` |
-| Model (production) | Qwen3-VL-8B-Thinking fine-tuned as `med-r1` |
-| Model (demo) | ChatGPT (OpenAI API) |
-| Temperature | 0.3 (clinical precision) |
-| Thinking mode | Chain-of-thought reasoning enabled |
-| Max tokens | 1024 |
-| Surfaces | Patient app (via A1 delegation) · OpenEMR clinician portal (via A5) |
+| **Model name** | `med-r1` |
+| **Base model** | Qwen3-VL-8B-Thinking |
+| **Parameters** | ~8 billion |
+| **Modality** | Vision-Language (text + image) |
+| **Fine-tuning method** | Supervised fine-tuning (SFT) on clinical reasoning tasks |
+| **Domain** | Chronic disease management (diabetes, hypertension, hyperlipidemia) |
+| **Region focus** | Singapore and Southeast Asia |
+| **Languages** | English, Chinese (Simplified), Malay, Tamil |
+| **Thinking mode** | Chain-of-thought reasoning enabled |
+| **Temperature** | 0.3 (clinical precision) |
+| **Max output tokens** | 1024–2048 |
+| **Serving framework** | vLLM |
+| **GPU requirement** | 2× NVIDIA H200 |
+| **API compatibility** | OpenAI-compatible (`/v1/chat/completions`) |
 
-### 4.2 Clinical Capabilities
+---
 
-The V1 Clinical Agent covers the full spectrum of clinical reasoning tasks:
+## 3. Why Qwen3-VL-8B?
 
-#### Drug Interaction Checking
-- Reads `MedicationRequest` (active prescriptions) and `AllergyIntolerance` resources
-- Queries the RxNorm-coded terminology service for drug–drug interactions
-- Flags contraindications and severity (mild / moderate / severe) for clinician review
-- Checks drug–food interactions (e.g., grapefruit + statin, warfarin + vitamin K)
+The base model was selected for:
 
-#### Lab Result Interpretation
-- Retrieves `Observation` resources filtered by LOINC code and time window
-- Interprets HbA1c trends (`4548-4`), blood pressure (`55284-4`), fasting glucose (`2345-7`), lipid panel
-- Compares across ≥ 3 data points over 90+ days to assess trajectory
-- Returns confidence level: `high` (clear evidence) / `medium` (partial) / `low` (insufficient)
+- **Vision-Language capability** — can process medical images (lab reports, medication labels, wound photos) alongside text, enabling future multimodal clinical features
+- **8B parameter sweet spot** — large enough for clinical reasoning quality, small enough to serve on 2× H200 GPUs with acceptable latency
+- **Thinking mode** — built-in chain-of-thought reasoning produces transparent, auditable clinical reasoning traces
+- **Multilingual foundation** — strong performance across English, Chinese, Malay, and Tamil — the four official languages of Singapore
+- **Open weights** — allows fine-tuning, on-premise deployment, and compliance with healthcare data sovereignty requirements
 
-#### Condition & Risk Reasoning
-- Reads `Condition` resources (SNOMED CT coded, `clinicalStatus=active`)
-- Synthesises multi-condition context (diabetes + hypertension + hyperlipidemia)
-- Produces evidence-based risk commentary with explicit EHR citations
-- Flags anomalies: worsening trends, missed follow-ups, unaddressed conditions
+---
 
-#### Pre-Visit Clinical Brief Generation
-- Aggregates 30 days of patient-side data: medication adherence (PDC), biometrics, PRO scores, engagement, escalation flags
-- Produces structured `FHIR Composition` delivered to clinicians via CDS Hooks
-- Supports clinician portal (OpenEMR) integration
+## 4. Fine-Tuning: From Qwen3-VL to med-r1
 
-### 4.3 FHIR Scopes
+### 4.1 Training Objective
 
-```
-patient/Patient.read
-patient/Patient.$everything
-patient/Condition.read
-patient/Observation.read
-patient/MedicationRequest.read
-patient/AllergyIntolerance.read
-patient/Encounter.read
-patient/CarePlan.read
-patient/Procedure.read
-patient/Immunization.read
-patient/DocumentReference.read
-patient/Composition.write
-patient/ServiceRequest.write
-```
+Transform the general-purpose Qwen3-VL-8B into a **clinical reasoning specialist** that can:
 
-### 4.4 Tool Registry (smolagents)
+1. Synthesise patient health records (FHIR-formatted) into evidence-based clinical assessments
+2. Check drug–drug and drug–food interactions
+3. Interpret lab results and vital sign trends over time
+4. Generate structured clinical summaries for clinician pre-visit briefs
+5. Reason about multi-condition patients (diabetes + hypertension + hyperlipidemia)
+6. Produce outputs in a structured JSON format with explicit evidence citations
 
-The agent operates via a structured tool registry. Key tools:
+### 4.2 Training Data Domains
 
-```python
-patient_everything(patient_id)          # Full FHIR Bundle for patient compartment
-search_conditions(patient_id, snomed)   # Active conditions by SNOMED CT
-search_observations(patient_id, loinc, period_days)  # Labs/vitals by LOINC
-search_medications(patient_id)          # Active MedicationRequests
-search_allergies(patient_id)            # AllergyIntolerance records
-check_drug_interaction(medication_codes)  # RxNorm-based DDI check
-write_composition(patient_id, title, sections)  # FHIR Composition output
-search_encounters(patient_id, status, period_days)  # Encounter history
-```
+| Domain | Content |
+|---|---|
+| Clinical Q&A | Drug interactions, condition explanations, lab interpretation |
+| FHIR-grounded reasoning | Responses that cite specific FHIR resources (Observation, Condition, MedicationRequest) |
+| Southeast Asian clinical context | Singapore healthcare protocols, local medication names, cultural health practices |
+| Structured output | JSON-formatted clinical responses with assessment, evidence, confidence, warnings |
+| Safety alignment | Refusals for diagnosis, medication changes, emergency triage |
 
-### 4.5 Structured Output Format
+### 4.3 Output Format
 
-The agent returns JSON-structured clinical responses (never raw prose sent directly to patients):
+`med-r1` is trained to produce structured JSON clinical responses:
 
 ```json
 {
-  "assessment": "Clinical summary in plain text...",
+  "assessment": "Plain-text clinical summary...",
   "evidence": [
     {
       "resource_type": "Observation",
@@ -218,179 +89,154 @@ The agent returns JSON-structured clinical responses (never raw prose sent direc
   ],
   "confidence": "high | medium | low",
   "warnings": ["Any safety-relevant concerns"],
-  "suggested_actions": ["Optional follow-ups for clinician review"]
+  "suggested_actions": ["Optional clinician follow-ups"]
 }
 ```
 
-Responses are never fabricated — all `evidence` entries cite real FHIR resource IDs and dates.
-
-### 4.6 Error Handling
-
-| Error Condition | Handling |
-|---|---|
-| `med-r1` / LLM timeout (> 10s) | Return partial answer with `confidence=low`; log timeout |
-| FHIR search returns empty | Explicitly state: `"No {resource} records found"` — never infer |
-| Drug interaction service unavailable | Proceed without DDI data; add `warning: "Drug interaction check unavailable"` |
-| SEA-LION Guard BLOCK on output | Regenerate with explicit safety constraints; log for audit |
+- All evidence entries cite real FHIR resource IDs and dates
+- Never fabricates data not present in the provided context
+- States confidence level based on data completeness: `high` (clear evidence), `medium` (partial data), `low` (insufficient data)
 
 ---
 
-## 5. Safety Architecture — SEA-LION Guard
+## 5. Model Serving Configuration
 
-The SEA-LION Guard is a mandatory safety wrapper applied to **all agent inputs and outputs**.
-
-### 5.1 Input Gate
-- **Prompt injection detection** — rejects attempts to hijack agent instructions
-- **Multilingual toxicity filter** — covers EN, ZH, MS, TA
-- **PII redaction** — strips identifiers before reaching the LLM
-- **FHIR reference validation** — ensures referenced resources are valid and accessible
-
-### 5.2 Output Gate
-- **FHIR `$validate`** — profile conformance check on all written resources
-- **`$validate-code`** — terminology binding verification (SNOMED, LOINC, RxNorm)
-- **Hallucination check** — cross-references clinical findings against source FHIR data
-- **Clinical harm filter** — blocks outputs that advise medication changes, diagnoses, or emergency self-treatment
-
-### 5.3 Decision Taxonomy
-
-| Decision | Meaning |
-|---|---|
-| `PASS` | Content delivered as-is |
-| `FLAG` | Content delivered with a warning annotation |
-| `ESCALATE` | Requires clinician review before delivery |
-| `BLOCK` | Content rejected; agent regenerates or returns safe fallback |
-
----
-
-## 6. FHIR Data Model
-
-Med-SEAL V1 uses **HL7 FHIR R4** as its primary data standard. Key resource usage:
-
-| Resource | Usage | Standard |
-|---|---|---|
-| `Patient` | Demographics, language, care team references | FHIR R4 |
-| `Condition` | Active diagnoses (diabetes, hypertension, HLD) | SNOMED CT |
-| `MedicationRequest` | Prescriptions | RxNorm |
-| `MedicationAdministration` | Patient-confirmed dose records | RxNorm |
-| `Observation` | Vitals, labs, wearable readings, PRO scores | LOINC |
-| `AllergyIntolerance` | Drug/food allergies | SNOMED CT |
-| `Composition` | Pre-visit clinical briefs, summaries | LOINC section codes |
-| `Communication` | Chat messages, nudges | Med-SEAL CodeSystem |
-| `Flag` | Clinical escalation markers | Med-SEAL CodeSystem |
-| `CommunicationRequest` | Clinician notification requests | — |
-| `RiskAssessment` | Behavioral risk scores | Med-SEAL CodeSystem |
-| `Goal` | Patient wellness goals | — |
-| `NutritionOrder` | Dietary recommendations | — |
-| `QuestionnaireResponse` | PRO responses | — |
-
----
-
-## 7. Feature Coverage
-
-Med-SEAL V1 delivers **18 AI-powered features** across both patient and clinician surfaces:
-
-| Feature | Description | Primary Agent |
-|---|---|---|
-| F01 Chat | Conversational health assistant | A1 (Companion) |
-| F02 Medication | Adherence tracking, interaction checking | A2 / A6 |
-| F03 Nudge | Proactive reminders and alerts | A3 |
-| F04 PROs | Patient-reported outcome collection | A1 / A3 |
-| F05 Wearables | Biometric data ingestion and alerting | A6 |
-| F06 Clinician Summary | Pre-visit brief via CDS Hooks | A5 |
-| F07 Dietary | Culturally-appropriate nutrition guidance | A4 |
-| F08 Outcome Framework | Population-level clinical metrics | A6 |
-| F09 Dashboard | Clinician and patient analytics views | A6 |
-| F10 Escalation | Tiered alert escalation to care team | A3 |
-| F11 Anticipation | Behavioral risk modeling | A3 |
-| F12 Appointments | Scheduling, reminders, pre-visit prep | A1 / A3 |
-| F13 Caregiver | Caregiver-aware communication | A1 |
-| F14 Education | Personalised health education delivery | A1 / A4 |
-| F15 Timeline | Longitudinal patient journey visualization | A6 |
-| F16 Readmission | Readmission risk flagging | A6 / A3 |
-| F17 A/B Framework | Clinical trial engagement randomisation | A6 |
-| F18 Satisfaction | Patient satisfaction measurement | A1 / A6 |
-
----
-
-## 8. Deployment Context
-
-### 8.1 Current State (Demo)
-
-| Component | Status |
-|---|---|
-| OpenEMR | ✅ Running (Docker, port 8080/8081) |
-| Medplum FHIR | ✅ Running (Docker, port 8103) |
-| AI Service | ✅ Running (Node.js, port 4003) |
-| SSO | ✅ Running |
-| `med-r1` LLM | ❌ Not deployed — no GPU server |
-| MERaLiON | ❌ Not deployed |
-| SEA-LION | ❌ Not deployed |
-| **ChatGPT (demo substitute)** | ✅ Active via OpenAI API |
-
-### 8.2 Production Requirements
-
-To deploy Med-SEAL V1 with the full native model stack:
-
-| Resource | Requirement |
-|---|---|
-| GPU (MERaLiON, SEA-LION, Guard) | 3× NVIDIA H200 (1 per model) |
-| GPU (`med-r1` / Qwen3-VL-8B) | 2× NVIDIA H200 |
-| LLM serving framework | vLLM |
-| Storage | ≥ 500 GB NVMe (model weights + FHIR data) |
-| Network | Private inference endpoints (`medseal.internal`) |
-
-### 8.3 Switching from Demo to Production
-
-Only environment variable changes are required — no code changes:
+### 5.1 Production Endpoint (Target)
 
 ```bash
-# Demo (current)
-LLM_API_URL=https://api.openai.com/v1/chat/completions
-LLM_MODEL=gpt-4o
-
-# Production (Med-SEAL V1 native)
 LLM_API_URL=https://medseal-llm.ngrok-free.dev/v1/chat/completions
 LLM_MODEL=med-r1
 LLM_TEMPERATURE=0.3
 LLM_MAX_TOKENS=2048
 ```
 
----
+Served via **vLLM** on 2× NVIDIA H200 GPUs, exposed as an OpenAI-compatible API.
 
-## 9. Standards Compliance
+### 5.2 Demo Substitute (Current)
 
-| Standard | Usage |
+```bash
+LLM_API_URL=https://api.openai.com/v1/chat/completions
+LLM_MODEL=gpt-4o
+LLM_TEMPERATURE=0.3
+LLM_MAX_TOKENS=2048
+```
+
+Since `med-r1` requires dedicated GPU infrastructure that is not available for the demo, **ChatGPT** is used as a drop-in substitute. The same prompt templates, FHIR context injection, and safety guards are applied regardless of which model is behind the endpoint.
+
+### 5.3 Infrastructure Requirements
+
+| Resource | Requirement |
 |---|---|
-| HL7 FHIR R4 | All clinical data exchange |
-| SMART on FHIR | OAuth 2.0 scoped access to patient resources |
-| SNOMED CT | Diagnoses (`Condition.code`) |
-| LOINC | Lab results and observations (`Observation.code`) |
-| RxNorm | Medications (`MedicationRequest.medication`) |
-| ICD-10 | Billing and diagnostic codes (OpenEMR layer) |
-| CDS Hooks | Clinician-facing alerts and pre-visit briefs (F06) |
+| GPU | 2× NVIDIA H200 (80 GB HBM3 each) |
+| Serving framework | vLLM  |
+| Model weights storage | ~16 GB (FP16) |
+| Endpoint | Private, OpenAI-compatible `/v1/chat/completions` |
+| Latency target | < 10 seconds for clinical reasoning responses |
 
 ---
 
-## 10. Roadmap: V1 → V2
+## 6. How the Agent System Uses Med-SEAL V1
 
-The V1 Clinical Agent is a monolithic fine-tuned model covering all clinical reasoning tasks. The planned V2 architecture decomposes this into specialised agents for scalability and independent model updates:
+Med-SEAL V1 is consumed by the broader agent architecture as follows:
 
-| V1 Component | V2 Equivalent |
+```
+Patient / Clinician
+        │
+  SEA-LION Guard (input)
+        │
+  smolagents Orchestrator
+        │
+   ┌────┴─────┐
+   │ A2 Agent │  ←── calls med-r1 for clinical reasoning
+   │ A5 Agent │  ←── calls med-r1 for pre-visit briefs
+   └────┬─────┘
+        │
+  ┌─────▼──────┐
+  │  med-r1    │  ← THIS IS MED-SEAL V1
+  │  (LLM)     │
+  └─────┬──────┘
+        │
+  SEA-LION Guard (output)
+        │
+  FHIR R4 response
+```
+
+- **A2 (Clinical Reasoning Agent)** — routes clinical questions (drug interactions, lab interpretation, condition reasoning) to `med-r1`
+- **A5 (Insight Synthesis Agent)** — uses `med-r1` to generate pre-visit clinical briefs from aggregated patient data
+- **A1 (Companion Agent)** — indirectly uses `med-r1` via delegation to A2 for complex medical questions, then rephrases the response for patients
+
+Other agents (A3 Nudge, A4 Lifestyle) use different models (MERaLiON, SEA-LION) and do **not** depend on Med-SEAL V1.
+
+---
+
+## 7. Clinical Capabilities of med-r1
+
+### 7.1 Drug Interaction Checking
+- Input: List of active medications (RxNorm-coded from FHIR `MedicationRequest`)
+- Output: Interaction severity, affected drug pairs, clinical recommendation
+- Checks both drug–drug and drug–food interactions
+
+### 7.2 Lab Result Interpretation
+- Input: FHIR `Observation` resources (LOINC-coded) with temporal data
+- Output: Trend analysis across ≥ 3 data points over 90+ days
+- Covers: HbA1c, blood pressure, fasting glucose, lipid panel, eGFR
+
+### 7.3 Multi-Condition Clinical Reasoning
+- Reasons across co-morbid conditions: Type 2 diabetes + hypertension + hyperlipidemia
+- Identifies interactions between conditions and their respective treatment plans
+- Produces holistic clinical assessments rather than single-condition responses
+
+### 7.4 Pre-Visit Brief Generation
+- Aggregates 30 days of patient-side data (adherence, biometrics, PRO scores, engagement)
+- Outputs structured `FHIR Composition` sections
+- Designed for delivery to clinicians via CDS Hooks ≥ 30 min before appointment
+
+### 7.5 Safety Constraints (Built into the Model)
+- **Never fabricates** clinical data not present in the provided FHIR context
+- **Never recommends** starting, stopping, or changing medications
+- **Never provides** a diagnosis — only explains existing conditions on record
+- **Never triages** emergencies — defers to clinical escalation pathways
+- All outputs pass through the external SEA-LION Guard before reaching any user surface
+
+---
+
+## 8. Why Not Deployed?
+
+Med-SEAL V1 (`med-r1`) requires **2× NVIDIA H200 GPUs** running vLLM to serve the model at production-grade latency (< 10s per request). This infrastructure is not available in the current demo environment.
+
+**What the demo preserves without the model:**
+
+| Aspect | Preserved? | Detail |
+|---|---|---|
+| Prompt architecture | ✅ Yes | Same system prompts, few-shot examples, instruction templates |
+| FHIR context injection | ✅ Yes | Same Patient, Condition, Observation, MedicationRequest loading |
+| Safety guards | ✅ Yes | SEA-LION Guard input/output gates applied identically |
+| Structured JSON output | ✅ Yes | ChatGPT follows the same output schema |
+| Clinical fine-tuning quality | ❌ No | ChatGPT lacks domain-specific fine-tuning for SEA clinical context |
+| Multimodal (image) support | ❌ No | ChatGPT does not replicate `med-r1`'s vision-language capabilities |
+| Latency guarantees | ❌ No | Depends on OpenAI API availability |
+
+**To switch to production:** update two environment variables (`LLM_API_URL`, `LLM_MODEL`). No code changes required.
+
+---
+
+## 9. Relationship to V2
+
+Med-SEAL V1 is the **first-generation model**. In the V2 roadmap, the model may be updated or replaced, but V1 remains the baseline:
+
+| V1 | V2 (Planned) |
 |---|---|
-| V1 Clinical Agent (reasoning) | A2 Clinical Reasoning Agent |
-| V1 Clinical Agent (pre-visit brief) | A5 Insight Synthesis Agent |
-| V1 integrated safety layer | G1 SEA-LION Guard (standalone) |
-| V1 single orchestrator | O1 smolagents Orchestrator (extended) |
+| Single model (`med-r1`) serves all clinical reasoning | Potentially specialised models per agent |
+| Qwen3-VL-8B base | May upgrade to larger or more specialised base |
+| 2× H200 serving | Scaled serving with load balancing |
+| SFT-only training | May add RLHF or DPO alignment stages |
 
 ---
 
-## 11. References
+## 10. References
 
-- {doc}`ai-agents/overview` — Agent roster and orchestration diagram
-- {doc}`ai-agents/clinical-agent` — V1 Clinical Agent detail page
-- {doc}`architecture` — System layer and deployment diagrams
-- {doc}`developer-guide/api-reference` — REST API reference
-- {doc}`developer-guide/fhir-data-model` — FHIR resource profiles
-- {doc}`developer-guide/adding-ai-features` — Extension guide
-- {doc}`standards` — Coding standards and conventions
+- {doc}`ai-agents/overview` — Multi-agent architecture that consumes this model
+- {doc}`ai-agents/clinical-agent` — Clinical agent detail page
+- {doc}`architecture` — System architecture and deployment diagrams
+- {doc}`developer-guide/fhir-data-model` — FHIR resource profiles used in model context
 - {doc}`deployment` — Infrastructure and environment configuration
