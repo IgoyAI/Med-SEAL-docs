@@ -111,6 +111,19 @@ docker compose down -v
 docker image prune
 ```
 
+## Cloud Deployment (GCP)
+
+For cloud deployment using **Google Cloud Run** and **GKE**, see the dedicated guide:
+
+- **[GCP Deployment Guide](ai-agents/gcp-deployment.md)** — Cloud Run serverless deployment, GKE cluster management, environment configuration
+
+### Current Live Deployments
+
+| Platform | URL | Region |
+|----------|-----|--------|
+| **Cloud Run** (AI Agent) | `https://medseal-agent-74997794842.asia-southeast1.run.app` | Singapore |
+| **GKE** (Full Stack) | `*.medseal.34.54.226.15.nip.io` | Singapore |
+
 ## Production Considerations
 
 ```{warning}
