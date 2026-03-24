@@ -6,7 +6,7 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 
 | ID | Agent | Model | Surface |
 |---|---|---|---|
-| **V1** | **Med-SEAL V1 (Base Model)** | `med-r1` (Qwen3-VL-8B fine-tuned) / ChatGPT *(demo)* | Both |
+| **V1** | **Med-SEAL V1 (Base Model)** | [`aagdeyogipramana/Med-SEAL-V1`](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1) (Qwen3-VL-8B fine-tuned) | Both |
 | A1 | **Companion Agent** | MERaLiON + SEA-LION | Patient app |
 | A2 | **Clinical Reasoning Agent** | Qwen3-VL-8B (Med-SEAL) | Both |
 | A3 | **Nudge Agent** | MERaLiON + rule engine | Patient app |
@@ -111,7 +111,7 @@ SEALIONGuard ..> GuardDecision : returns
 ## Agent Descriptions
 
 ### V1 — Med-SEAL V1 (Base Model)
-**`med-r1`** is the fine-tuned base model (Qwen3-VL-8B-Thinking) that serves as the clinical reasoning backbone. It is purely the LLM — not an agent. Agents **A2** and **A5** call this model for clinical reasoning and pre-visit brief generation respectively.
+[**`aagdeyogipramana/Med-SEAL-V1`**](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1) is the fine-tuned base model (Qwen3-VL-8B-Thinking) that serves as the clinical reasoning backbone. It is purely the LLM — not an agent. Agents **A2** and **A5** call this model for clinical reasoning and pre-visit brief generation respectively.
 
 > **Not deployed in demo** — ChatGPT is used as a substitute. No code changes needed to switch; only environment variables. See {doc}`clinical-agent` for full model card and technical details.
 
@@ -119,7 +119,7 @@ SEALIONGuard ..> GuardDecision : returns
 The patient's primary conversational interface. Powered by **MERaLiON** for empathetic, culturally-aware dialogue and **SEA-LION** for multilingual support (English, Chinese, Malay, Tamil). Delegates complex queries to specialised agents and rephrases technical responses in patient-friendly language.
 
 ### A2  - Clinical Reasoning Agent
-The medical reasoning engine powered by **Qwen3-VL-8B** (fine-tuned as med-r1). Reads FHIR clinical data (conditions, medications, observations) and synthesises evidence-based clinical responses. Used by both patient-facing features (via A1) and clinician-facing features.
+The medical reasoning engine powered by [**aagdeyogipramana/Med-SEAL-V1**](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1) (Qwen3-VL-8B fine-tuned). Reads FHIR clinical data (conditions, medications, observations) and synthesises evidence-based clinical responses. Used by both patient-facing features (via A1) and clinician-facing features.
 
 ### A3  - Nudge Agent
 The proactive engagement engine combining **MERaLiON** for message generation with a configurable **rule engine** for trigger evaluation. Handles medication reminders, appointment alerts, biometric threshold warnings, and tiered escalation to clinicians.

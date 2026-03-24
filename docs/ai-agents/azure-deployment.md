@@ -50,7 +50,7 @@ clinical_llm_backend: str = "azure"  # or "vllm" for Med-SEAL V1
 | Mode | Backend | Model | When |
 |---|---|---|---|
 | `azure` *(current)* | SEA-LION v4-32B via API | Qwen-SEA-LION-v4-32B-IT | Production — no GPU needed |
-| `vllm` | Self-hosted vLLM | `med-r1` (Med-SEAL V1) | Future — requires 2× H200 GPU |
+| `vllm` | Self-hosted vLLM | [`aagdeyogipramana/Med-SEAL-V1`](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1) | Future — requires 2× H200 GPU |
 
 Switching is a single env var change: `MEDSEAL_CLINICAL_LLM_BACKEND=vllm`.
 
@@ -363,7 +363,7 @@ gcloud run services update medseal-agent \
 
 ## 7. Related Pages
 
-- {doc}`../technical-report-v1` — Med-SEAL V1 base model (`med-r1`) technical report
+- {doc}`../technical-report-v1` — Med-SEAL V1 base model ([`aagdeyogipramana/Med-SEAL-V1`](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1)) technical report
 - {doc}`overview` — Multi-agent roster and orchestration
 - {doc}`../architecture` — Full system architecture
 - {doc}`gcp-deployment` — Detailed GCP deployment guide

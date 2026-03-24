@@ -8,11 +8,11 @@
 
 ## 1. What is Med-SEAL V1?
 
-Med-SEAL V1 refers to **`med-r1`**, a **fine-tuned clinical large language model** based on [Qwen3-VL-8B-Thinking](https://huggingface.co/Qwen). It is the foundational AI model purpose-built for the Med-SEAL healthcare platform.
+Med-SEAL V1 refers to [**`aagdeyogipramana/Med-SEAL-V1`**](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1), a **fine-tuned clinical large language model** based on [Qwen3-VL-8B-Thinking](https://huggingface.co/Qwen). It is the foundational AI model purpose-built for the Med-SEAL healthcare platform.
 
 Med-SEAL V1 is **purely the base model** — not the multi-agent system, not the orchestrator, and not the patient/clinician application stack. The broader Med-SEAL agent architecture (A1–A6, SEA-LION Guard, smolagents) *consumes* this model as its clinical reasoning backbone.
 
-> **Demo Note:** Med-SEAL V1 (`med-r1`) is **not deployed** in the live demonstration due to the absence of GPU inference infrastructure. In the demo, its role is fulfilled by **ChatGPT** (OpenAI API) using the same prompt architecture and FHIR context pipeline. Switching to `med-r1` in production requires only environment variable changes — no code changes.
+> **Note:** Med-SEAL V1 is **not yet deployed** in the live system due to the absence of GPU inference infrastructure. In the current deployment, its role is fulfilled by **SEA-LION v4-32B** (AI Singapore) using the same prompt architecture and FHIR context pipeline. Switching to Med-SEAL V1 in production requires only environment variable changes — no code changes.
 
 ---
 
@@ -20,7 +20,7 @@ Med-SEAL V1 is **purely the base model** — not the multi-agent system, not the
 
 | Field | Value |
 |---|---|
-| **Model name** | `med-r1` |
+| **Model name** | [`aagdeyogipramana/Med-SEAL-V1`](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1) |
 | **Base model** | Qwen3-VL-8B-Thinking |
 | **Parameters** | ~8 billion |
 | **Modality** | Vision-Language (text + image) |
@@ -49,7 +49,7 @@ The base model was selected for:
 
 ---
 
-## 4. Fine-Tuning: From Qwen3-VL to med-r1
+## 4. Fine-Tuning: From Qwen3-VL to Med-SEAL-V1
 
 ### 4.1 Training Objective
 
@@ -74,7 +74,7 @@ Transform the general-purpose Qwen3-VL-8B into a **clinical reasoning specialist
 
 ### 4.3 Output Format
 
-`med-r1` is trained to produce structured JSON clinical responses:
+Med-SEAL-V1 is trained to produce structured JSON clinical responses:
 
 ```json
 {
@@ -104,24 +104,24 @@ Transform the general-purpose Qwen3-VL-8B into a **clinical reasoning specialist
 ### 5.1 Production Endpoint (Target)
 
 ```bash
-LLM_API_URL=https://medseal-llm.ngrok-free.dev/v1/chat/completions
-LLM_MODEL=med-r1
-LLM_TEMPERATURE=0.3
-LLM_MAX_TOKENS=2048
+# Production endpoint (target — self-hosted vLLM)
+MEDSEAL_VLLM_URL=http://medseal-vlm.internal:8000/v1
+MEDSEAL_VLLM_MODEL=aagdeyogipramana/Med-SEAL-V1
+MEDSEAL_CLINICAL_LLM_BACKEND=vllm
 ```
 
 Served via **vLLM** on 2× NVIDIA H200 GPUs, exposed as an OpenAI-compatible API.
 
-### 5.2 Demo Substitute (Current)
+### 5.2 Current Production Substitute
 
 ```bash
-LLM_API_URL=https://api.openai.com/v1/chat/completions
-LLM_MODEL=gpt-4o
-LLM_TEMPERATURE=0.3
-LLM_MAX_TOKENS=2048
+# SEA-LION v4-32B (AI Singapore)
+MEDSEAL_SEALION_API_URL=https://api.sea-lion.ai/v1
+MEDSEAL_SEALION_API_KEY=<your-key>
+MEDSEAL_SEALION_MODEL=aisingapore/Qwen-SEA-LION-v4-32B-IT
 ```
 
-Since `med-r1` requires dedicated GPU infrastructure that is not available for the demo, **ChatGPT** is used as a drop-in substitute. The same prompt templates, FHIR context injection, and safety guards are applied regardless of which model is behind the endpoint.
+Since Med-SEAL V1 requires dedicated GPU infrastructure, **SEA-LION v4-32B** (AI Singapore's National LLM) is used as the production substitute. The same prompt templates, FHIR context injection, and safety guards are applied regardless of which model is behind the endpoint.
 
 ### 5.3 Infrastructure Requirements
 
@@ -147,12 +147,13 @@ Patient / Clinician
   smolagents Orchestrator
         │
    ┌────┴─────┐
-   │ A2 Agent │  ←── calls med-r1 for clinical reasoning
-   │ A5 Agent │  ←── calls med-r1 for pre-visit briefs
+   │ A2 Agent │  ←── calls Med-SEAL-V1 for clinical reasoning
+   │ A5 Agent │  ←── calls Med-SEAL-V1 for pre-visit briefs
    └────┬─────┘
         │
   ┌─────▼──────┐
-  │  med-r1    │  ← THIS IS MED-SEAL V1
+  │ Med-SEAL-V1│  ← THIS IS MED-SEAL V1
+  │  (LLM)     │  ← huggingface.co/aagdeyogipramana/Med-SEAL-V1
   │  (LLM)     │
   └─────┬──────┘
         │
@@ -161,15 +162,15 @@ Patient / Clinician
   FHIR R4 response
 ```
 
-- **A2 (Clinical Reasoning Agent)** — routes clinical questions (drug interactions, lab interpretation, condition reasoning) to `med-r1`
-- **A5 (Insight Synthesis Agent)** — uses `med-r1` to generate pre-visit clinical briefs from aggregated patient data
-- **A1 (Companion Agent)** — indirectly uses `med-r1` via delegation to A2 for complex medical questions, then rephrases the response for patients
+- **A2 (Clinical Reasoning Agent)** — routes clinical questions (drug interactions, lab interpretation, condition reasoning) to Med-SEAL-V1
+- **A5 (Insight Synthesis Agent)** — uses Med-SEAL-V1 to generate pre-visit clinical briefs from aggregated patient data
+- **A1 (Companion Agent)** — indirectly uses Med-SEAL-V1 via delegation to A2 for complex medical questions, then rephrases the response for patients
 
 Other agents (A3 Nudge, A4 Lifestyle) use different models (MERaLiON, SEA-LION) and do **not** depend on Med-SEAL V1.
 
 ---
 
-## 7. Clinical Capabilities of med-r1
+## 7. Clinical Capabilities of Med-SEAL-V1
 
 ### 7.1 Drug Interaction Checking
 - Input: List of active medications (RxNorm-coded from FHIR `MedicationRequest`)
@@ -200,23 +201,23 @@ Other agents (A3 Nudge, A4 Lifestyle) use different models (MERaLiON, SEA-LION) 
 
 ---
 
-## 8. Why Not Deployed?
+## 8. Deployment Status
 
-Med-SEAL V1 (`med-r1`) requires **2× NVIDIA H200 GPUs** running vLLM to serve the model at production-grade latency (< 10s per request). This infrastructure is not available in the current demo environment.
+Med-SEAL V1 ([`aagdeyogipramana/Med-SEAL-V1`](https://huggingface.co/aagdeyogipramana/Med-SEAL-V1)) requires **2× NVIDIA H200 GPUs** running vLLM to serve the model at production-grade latency (< 10s per request). In the current deployment, **SEA-LION v4-32B** serves as the clinical reasoning backend.
 
-**What the demo preserves without the model:**
+**What the current deployment preserves without Med-SEAL V1:**
 
 | Aspect | Preserved? | Detail |
 |---|---|---|
 | Prompt architecture | ✅ Yes | Same system prompts, few-shot examples, instruction templates |
 | FHIR context injection | ✅ Yes | Same Patient, Condition, Observation, MedicationRequest loading |
 | Safety guards | ✅ Yes | SEA-LION Guard input/output gates applied identically |
-| Structured JSON output | ✅ Yes | ChatGPT follows the same output schema |
-| Clinical fine-tuning quality | ❌ No | ChatGPT lacks domain-specific fine-tuning for SEA clinical context |
-| Multimodal (image) support | ❌ No | ChatGPT does not replicate `med-r1`'s vision-language capabilities |
-| Latency guarantees | ❌ No | Depends on OpenAI API availability |
+| Structured JSON output | ✅ Yes | SEA-LION follows the same output schema |
+| Clinical fine-tuning quality | ❌ No | SEA-LION lacks domain-specific fine-tuning for clinical reasoning |
+| Multimodal (image) support | ❌ No | SEA-LION does not replicate Med-SEAL-V1's vision-language capabilities |
+| Latency guarantees | ✅ Yes | SEA-LION API provides consistent latency |
 
-**To switch to production:** update two environment variables (`LLM_API_URL`, `LLM_MODEL`). No code changes required.
+**To switch to Med-SEAL V1:** update `MEDSEAL_CLINICAL_LLM_BACKEND=vllm` and set the vLLM endpoint. No code changes required.
 
 ---
 
@@ -226,7 +227,7 @@ Med-SEAL V1 is the **first-generation model**. In the V2 roadmap, the model may 
 
 | V1 | V2 (Planned) |
 |---|---|
-| Single model (`med-r1`) serves all clinical reasoning | Potentially specialised models per agent |
+| Single model (Med-SEAL-V1) serves all clinical reasoning | Potentially specialised models per agent |
 | Qwen3-VL-8B base | May upgrade to larger or more specialised base |
 | 2× H200 serving | Scaled serving with load balancing |
 | SFT-only training | May add RLHF or DPO alignment stages |
