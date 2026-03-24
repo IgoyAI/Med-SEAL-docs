@@ -1,5 +1,9 @@
 # AI Agents Overview
 
+A patient with diabetes doesn't need a chatbot. They need someone who remembers their medications, notices when their blood glucose is trending up, gently reminds them about the dose they missed this morning, explains their HbA1c in plain language, and knows that *nasi lemak* for breakfast means adjusting their advice — all in Mandarin, if that's what they prefer.
+
+That's what Med-SEAL's AI agents do. Seven specialised agents work together — one speaks to the patient, one reasons about their medical data, one watches for danger signs, one knows Southeast Asian food, and one prepares their doctor for the next visit. They are orchestrated by a rule-based router and wrapped in a dual-layer safety guard that ensures no harmful content ever reaches a patient.
+
 Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agents collaborate to deliver 18 smart healthcare features. The agents are orchestrated by a rule-based router and protected by the SEA-LION Guard safety system.
 
 ## Agent Roster
