@@ -1,0 +1,1408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Agent — Implementation &amp; GCP Cloud Run Deployment &mdash; Med-SEAL Suite Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a4891337" />
+
+  
+    <link rel="canonical" href="https://igoyai.github.io/Med-SEAL-docs/ai-agents/azure-deployment.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GCP Deployment Guide" href="gcp-deployment.html" />
+    <link rel="prev" title="Med-SEAL V1 Clinical Agent" href="clinical-agent.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Med-SEAL Suite
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../demo.html">Live Demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../demo.html#quick-access">Quick Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../demo.html#login-credentials">Login Credentials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#ai-dashboard-sso-portal">AI Dashboard / SSO Portal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#openemr-clinical-emr">OpenEMR (Clinical EMR)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#medplum-admin-console">Medplum Admin Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#orthanc-pacs">Orthanc PACS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../demo.html#recommended-demo-walkthrough">Recommended Demo Walkthrough</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#for-clinicians-judges">For Clinicians / Judges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#for-technical-reviewers">For Technical Reviewers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../demo.html#patient-portal-ios">Patient Portal (iOS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../demo.html#service-health">Service Health</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#system-layers">System Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#data-flow">Data Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#technology-stack">Technology Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#network-topology">Network Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#deployment-diagram">Deployment Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html#data-flow-diagram">Data Flow Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#clone-the-repository">Clone the Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#start-all-services">Start All Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#access-points">Access Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#seed-sample-data">Seed Sample Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#verify-the-stack">Verify the Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#stop-reset">Stop &amp; Reset</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../components/openemr.html">OpenEMR</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#role-in-med-seal">Role in Med-SEAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#access">Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#docker-configuration">Docker Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#med-seal-customisations">Med-SEAL Customisations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/openemr.html#ai-chat-widget">AI Chat Widget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/openemr.html#med-seal-theme">Med-SEAL Theme</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#standards-compliance">Standards Compliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/openemr.html#key-features">Key Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/medplum.html">Medplum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#role-in-med-seal">Role in Med-SEAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#access">Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#docker-configuration">Docker Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#fhir-api-usage">FHIR API Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/medplum.html#common-endpoints">Common Endpoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/medplum.html#bulk-operations">Bulk Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#admin-app-features">Admin App Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/medplum.html#resource-types-used">Resource Types Used</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/patient-portal-native.html">Patient Portal Native</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#role-in-med-seal">Role in Med-SEAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#technology-stack">Technology Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#run-on-ios-simulator">Run on iOS Simulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#run-on-android-emulator">Run on Android Emulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#development-server-expo-go">Development Server (Expo Go)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#cors-proxy">CORS Proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#fhir-integration">FHIR Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#key-features">Key Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#ai-chat">AI Chat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#medication-management">Medication Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#vitals-dashboard">Vitals Dashboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#appointments">Appointments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/patient-portal-native.html#building-for-production">Building for Production</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#ios">iOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/patient-portal-native.html#android">Android</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components/sso.html">SSO &amp; Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#role-in-med-seal">Role in Med-SEAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#architecture">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/sso.html#entity-relationship-diagram">Entity-Relationship Diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/sso.html#authentication-flow-sequence-diagram">Authentication Flow (Sequence Diagram)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#sso-database">SSO Database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/sso.html#schema">Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#openemr-sync">OpenEMR Sync</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/sso.html#sync-configuration">Sync Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#admin-panel">Admin Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/sso.html#security-notes">Security Notes</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AI Platform</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">AI Agents Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#agent-roster">Agent Roster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#agent-class-diagram">Agent Class Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#agent-descriptions">Agent Descriptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#v1-med-seal-v1-base-model">V1 — Med-SEAL V1 (Base Model)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a1-companion-agent">A1  - Companion Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a2-clinical-reasoning-agent">A2  - Clinical Reasoning Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a3-nudge-agent">A3  - Nudge Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a4-lifestyle-agent">A4  - Lifestyle Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a5-insight-synthesis-agent">A5  - Insight Synthesis Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#a6-measurement-agent">A6  - Measurement Agent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#orchestration">Orchestration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#sea-lion-guard">SEA-LION Guard</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#input-gate">Input Gate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#output-gate">Output Gate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overview.html#decisions">Decisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#feature-to-agent-matrix">Feature-to-Agent Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#llm-configuration">LLM Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clinical-agent.html">Med-SEAL V1 Clinical Agent</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="clinical-agent.html#what-is-med-seal-v1">What is Med-SEAL V1?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clinical-agent.html#which-agents-use-it">Which Agents Use It?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clinical-agent.html#current-vs-target-deployment">Current vs Target Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clinical-agent.html#related-pages">Related Pages</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AI Agent — Implementation &amp; GCP Cloud Run Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-overview">1. Implementation Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#technology-stack">1.1 Technology Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#agent-roster">1.2 Agent Roster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#llm-backend-dual-mode">1.3 LLM Backend — Dual Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-endpoints">1.4 API Endpoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#external-dependencies">1.5 External Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">2. Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gcp-cloud-run-deployment">3. GCP Cloud Run Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gcp-resources">3.1 GCP Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environment-variables">3.2 Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#startup-command">3.3 Startup Command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deployment-steps">3.4 Deployment Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dockerfile">3.5 Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#requirements-deployment">3.6 Requirements (Deployment)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-diagram">4. Architecture Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monitoring-troubleshooting">5. Monitoring &amp; Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#logs">5.1 Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">5.2 Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scaling">5.3 Scaling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#live-deployment-urls">6. Live Deployment URLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-pages">7. Related Pages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gcp-deployment.html">GCP Deployment Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#cloud-run-deployment">Cloud Run Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#step-1-authenticate-set-project">Step 1: Authenticate &amp; Set Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#step-2-enable-required-apis">Step 2: Enable Required APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#step-3-deploy-from-source">Step 3: Deploy from Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#step-4-verify-deployment">Step 4: Verify Deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#updating-environment-variables">Updating Environment Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#current-deployment">Current Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#cloud-run-service">Cloud Run Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#gke-cluster-medseal-cluster">GKE Cluster (<code class="docutils literal notranslate"><span class="pre">medseal-cluster</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#gke-services-namespace-medseal">GKE Services (namespace: <code class="docutils literal notranslate"><span class="pre">medseal</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#api-endpoints">API Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#patient-app-surface">Patient App Surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#clinician-surface-openemr">Clinician Surface (OpenEMR)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#system-admin">System &amp; Admin</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gcp-deployment.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#health-check-shows-medplum-unreachable">Health Check Shows <code class="docutils literal notranslate"><span class="pre">medplum:</span> <span class="pre">unreachable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#health-check-shows-vllm-unreachable">Health Check Shows <code class="docutils literal notranslate"><span class="pre">vllm:</span> <span class="pre">unreachable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#redeploying-after-code-changes">Redeploying After Code Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gcp-deployment.html#viewing-logs">Viewing Logs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Specifications (F01-F18)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html#implementation-status-summary">Implementation Status Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#tier-1-must-be-functional-in-prototype">Tier 1: Must Be Functional in Prototype</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f01-meralion-sea-lion-chat-interface">F01 - MERaLiON / SEA-LION Chat Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f02-medication-management-adherence-tracking">F02 - Medication Management + Adherence Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f03-smart-nudge-engine">F03 - Smart Nudge Engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f04-conversational-pros-patient-reported-outcomes">F04 - Conversational PROs (Patient-Reported Outcomes)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f05-wearable-data-ingestion">F05 - Wearable Data Ingestion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f06-patient-insight-summary-for-clinician">F06 - Patient Insight Summary for Clinician</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#tier-2-strengthens-personalisation-impact">Tier 2: Strengthens Personalisation + Impact</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f07-dietary-lifestyle-engine-sea-culturally-aware">F07 - Dietary + Lifestyle Engine (SEA-Culturally Aware)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f08-outcome-measurement-framework">F08 - Outcome Measurement Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f09-adherence-biometric-analytics-dashboard">F09 - Adherence + Biometric Analytics Dashboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f10-escalation-pathways-tiered-clinician-alerts">F10 - Escalation Pathways (Tiered Clinician Alerts)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f11-behavioral-anticipation-model">F11 - Behavioral Anticipation Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#tier-3-polish-differentiation">Tier 3: Polish + Differentiation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f12-appointment-orchestrator-pre-post-visit">F12 - Appointment Orchestrator (Pre/Post Visit)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f13-caregiver-mode-linked-family-view-with-consent">F13 - Caregiver Mode (Linked Family View with Consent)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f14-adaptive-health-education-teachable-moments">F14 - Adaptive Health Education (Teachable Moments)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f15-multi-source-data-fusion-timeline">F15 - Multi-Source Data Fusion Timeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f16-readmission-risk-event-tracking">F16 - Readmission Risk + Event Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f17-a-b-evaluation-framework-synthetic-cohorts">F17 - A/B Evaluation Framework (Synthetic Cohorts)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#f18-patient-satisfaction-nps-tracking">F18 - Patient Satisfaction + NPS Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#code-map">Code Map</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../technical-report-v1.html">Med-SEAL V1 Technical Report</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#what-is-med-seal-v1">1. What is Med-SEAL V1?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#model-card">2. Model Card</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#why-qwen3-vl-8b">3. Why Qwen3-VL-8B?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#fine-tuning-from-qwen3-vl-to-med-seal-v1">4. Fine-Tuning: From Qwen3-VL to Med-SEAL-V1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#training-objective">4.1 Training Objective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#training-data-domains">4.2 Training Data Domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#output-format">4.3 Output Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#model-serving-configuration">5. Model Serving Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#production-endpoint-target">5.1 Production Endpoint (Target)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#current-production-substitute">5.2 Current Production Substitute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#infrastructure-requirements">5.3 Infrastructure Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#how-the-agent-system-uses-med-seal-v1">6. How the Agent System Uses Med-SEAL V1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#clinical-capabilities-of-med-seal-v1">7. Clinical Capabilities of Med-SEAL-V1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#drug-interaction-checking">7.1 Drug Interaction Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#lab-result-interpretation">7.2 Lab Result Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#multi-condition-clinical-reasoning">7.3 Multi-Condition Clinical Reasoning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#pre-visit-brief-generation">7.4 Pre-Visit Brief Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../technical-report-v1.html#safety-constraints-built-into-the-model">7.5 Safety Constraints (Built into the Model)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#deployment-status">8. Deployment Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#relationship-to-v2">9. Relationship to V2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical-report-v1.html#references">10. References</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Operations &amp; Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#docker-compose-overview">Docker Compose Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#starting-the-stack">Starting the Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#health-checks">Health Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../deployment.html#ai-service">AI Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../deployment.html#openemr">OpenEMR</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#volumes">Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#networking">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#stopping-resetting">Stopping &amp; Resetting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#cloud-deployment-gcp">Cloud Deployment (GCP)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../deployment.html#current-live-deployments">Current Live Deployments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../deployment.html#production-considerations">Production Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gke-deployment.html">GKE Cloud Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gke-deployment.html#infrastructure-overview">Infrastructure Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gke-deployment.html#deployment-steps">Deployment Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-1-bootstrap-infrastructure">Step 1: Bootstrap Infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-2-configure-secrets">Step 2: Configure Secrets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-3-provision-databases">Step 3: Provision Databases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-4-build-and-push-custom-images">Step 4: Build and Push Custom Images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-5-deploy-to-kubernetes">Step 5: Deploy to Kubernetes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gke-deployment.html#step-6-verify-ingress">Step 6: Verify Ingress</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gke-deployment.html#kubernetes-manifests">Kubernetes Manifests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gke-deployment.html#ingress-routing">Ingress Routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gke-deployment.html#gke-architecture-diagram">GKE Architecture Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../scripts.html#data-loading-seeding">Data Loading &amp; Seeding</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#load-synthea-js"><code class="docutils literal notranslate"><span class="pre">load-synthea.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#seed-medplum-patient-js"><code class="docutils literal notranslate"><span class="pre">seed-medplum-patient.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#generate-clinical-notes-js"><code class="docutils literal notranslate"><span class="pre">generate-clinical-notes.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#clean-patient-names-js"><code class="docutils literal notranslate"><span class="pre">clean-patient-names.js</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scripts.html#synchronisation">Synchronisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#sync-medplum-openemr-js"><code class="docutils literal notranslate"><span class="pre">sync-medplum-openemr.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#sync-medplum-openmrs-js"><code class="docutils literal notranslate"><span class="pre">sync-medplum-openmrs.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#sync-patients-full-js"><code class="docutils literal notranslate"><span class="pre">sync-patients-full.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#sync-batch-js"><code class="docutils literal notranslate"><span class="pre">sync-batch.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#sync-remaining-js"><code class="docutils literal notranslate"><span class="pre">sync-remaining.js</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scripts.html#radiology-dicom">Radiology &amp; DICOM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#integrate-radiology-js"><code class="docutils literal notranslate"><span class="pre">integrate-radiology.js</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#generate-dicom-3d-py"><code class="docutils literal notranslate"><span class="pre">generate-dicom-3d.py</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scripts.html#simulation">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../scripts.html#simulate-busy-hospital-js"><code class="docutils literal notranslate"><span class="pre">simulate-busy-hospital.js</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scripts.html#synthea">Synthea</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standards Compliance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../standards.html#standards-matrix">Standards Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../standards.html#fhir-r4-compliance">FHIR R4 Compliance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../standards.html#capabilities">Capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../standards.html#smart-on-fhir">SMART on FHIR</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../standards.html#terminology-bindings">Terminology Bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../standards.html#security-architecture">Security Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../fhir-resources.html">FHIR Resource Inventory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#patient-identity">Patient Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#clinical-data-read-from-emr">Clinical Data (Read from EMR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#medication-tracking-write">Medication Tracking (Write)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#communication">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#assessments-write">Assessments (Write)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#clinical-output-write">Clinical Output (Write)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#goals-planning">Goals &amp; Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#measurement">Measurement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#devices-wearables">Devices &amp; Wearables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#appointments">Appointments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#audit-provenance">Audit &amp; Provenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#education">Education</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fhir-resources.html#system">System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-setup">Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-style">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#commit-messages">Commit Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#license">License</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html">Logging In with Single Sign-On</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#creating-your-account">Creating Your Account</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#logging-in">Logging In</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#resetting-your-password">Resetting Your Password</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#session-timeout">Session Timeout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html">Patient Portal Native</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#installing-the-app">Installing the App</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#app-overview">App Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#home-screen">Home Screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#health-records">Health Records</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#notifications">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/patient-portal.html#privacy-and-data">Privacy and Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html">OpenEMR Clinician Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#accessing-openemr">Accessing OpenEMR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#dashboard-overview">Dashboard Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#patient-management">Patient Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#clinical-documentation">Clinical Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#prescribing-medications">Prescribing Medications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#scheduling-appointments">Scheduling Appointments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#ai-clinical-brief-pre-visit-summary">AI Clinical Brief (Pre-Visit Summary)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#billing-and-coding">Billing and Coding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#logging-out">Logging Out</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html">AI Chat and Health Insights</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#starting-a-chat">Starting a Chat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#what-you-can-ask">What You Can Ask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#languages">Languages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#health-insights">Health Insights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#pre-visit-summaries">Pre-Visit Summaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#safety-and-limitations">Safety and Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/ai-chat.html#feedback">Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html">Medication Tracking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#your-medication-schedule">Your Medication Schedule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#confirming-a-dose">Confirming a Dose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#missed-doses">Missed Doses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#adherence-score">Adherence Score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#medication-details">Medication Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#reminders">Reminders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/medications.html#viewing-history">Viewing History</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html">Appointments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#viewing-upcoming-appointments">Viewing Upcoming Appointments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#appointment-details">Appointment Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#pre-visit-summary">Pre-Visit Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#appointment-reminders">Appointment Reminders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#past-appointments">Past Appointments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/appointments.html#requesting-appointments">Requesting Appointments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html">Vitals and Biometrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#supported-measurements">Supported Measurements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#logging-a-reading-manually">Logging a Reading Manually</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#viewing-trends">Viewing Trends</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#wearable-integration">Wearable Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#alerts-and-notifications">Alerts and Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#deleting-a-reading">Deleting a Reading</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/login-sso.html">Logging In with Single Sign-On</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html#creating-your-account">Creating Your Account</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html#logging-in">Logging In</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#patient-portal-native-mobile-app">Patient Portal Native (Mobile App)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#openemr-clinician-web">OpenEMR (Clinician Web)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/login-sso.html#ai-dashboard-admin-web">AI Dashboard (Admin Web)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html#resetting-your-password">Resetting Your Password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html#session-timeout">Session Timeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/login-sso.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/patient-portal.html">Patient Portal Native</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#installing-the-app">Installing the App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#app-overview">App Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#home-screen">Home Screen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#health-records">Health Records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#notifications">Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/patient-portal.html#privacy-and-data">Privacy and Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/openemr-clinician.html">OpenEMR Clinician Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#accessing-openemr">Accessing OpenEMR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#dashboard-overview">Dashboard Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#patient-management">Patient Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#searching-for-a-patient">Searching for a Patient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#registering-a-new-patient">Registering a New Patient</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#clinical-documentation">Clinical Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#recording-an-encounter">Recording an Encounter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/openemr-clinician.html#ordering-labs-and-procedures">Ordering Labs and Procedures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#prescribing-medications">Prescribing Medications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#scheduling-appointments">Scheduling Appointments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#ai-clinical-brief-pre-visit-summary">AI Clinical Brief (Pre-Visit Summary)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#billing-and-coding">Billing and Coding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/openemr-clinician.html#logging-out">Logging Out</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/ai-chat.html">AI Chat and Health Insights</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#starting-a-chat">Starting a Chat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#what-you-can-ask">What You Can Ask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#languages">Languages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#health-insights">Health Insights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#pre-visit-summaries">Pre-Visit Summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#safety-and-limitations">Safety and Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/ai-chat.html#feedback">Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/medications.html">Medication Tracking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#your-medication-schedule">Your Medication Schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#confirming-a-dose">Confirming a Dose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#missed-doses">Missed Doses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#adherence-score">Adherence Score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#medication-details">Medication Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#reminders">Reminders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/medications.html#viewing-history">Viewing History</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/appointments.html">Appointments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#viewing-upcoming-appointments">Viewing Upcoming Appointments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#appointment-details">Appointment Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#pre-visit-summary">Pre-Visit Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#appointment-reminders">Appointment Reminders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#past-appointments">Past Appointments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/appointments.html#requesting-appointments">Requesting Appointments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user-guide/vitals.html">Vitals and Biometrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#supported-measurements">Supported Measurements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#logging-a-reading-manually">Logging a Reading Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#viewing-trends">Viewing Trends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#wearable-integration">Wearable Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#apple-health-ios">Apple Health (iOS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user-guide/vitals.html#google-health-connect-android">Google Health Connect (Android)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#alerts-and-notifications">Alerts and Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/vitals.html#deleting-a-reading">Deleting a Reading</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/index.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html">Environment Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#repository-clone">Repository Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#docker-compose-stack">Docker Compose Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#ai-service-local-development">AI Service (Local Development)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#patient-portal-native-mobile-dev">Patient Portal Native (Mobile Dev)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#ai-frontend-admin-dashboard">AI Frontend (Admin Dashboard)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#seeding-data">Seeding Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#connecting-to-services">Connecting to Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/environment-setup.html#rebuilding-custom-images">Rebuilding Custom Images</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html">FHIR Data Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#key-fhir-resources">Key FHIR Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#reading-fhir-data">Reading FHIR Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#writing-fhir-data">Writing FHIR Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#coding-systems">Coding Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#med-seal-conventions">Med-SEAL Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#fhir-subscriptions">FHIR Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html">AI Service API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#request-lifecycle-sequence-diagram">Request Lifecycle (Sequence Diagram)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#base-url">Base URL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#authentication">Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#health-check">Health Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#chat-companion-agent-a1">Chat (Companion Agent A1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#nudges-nudge-agent-a3">Nudges (Nudge Agent A3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#pre-visit-summary-insight-agent-a5">Pre-Visit Summary (Insight Agent A5)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#adherence-metrics-measurement-agent-a6">Adherence Metrics (Measurement Agent A6)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#error-responses">Error Responses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html">Adding a New AI Feature</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-1-define-your-feature">Step 1: Define Your Feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-2-create-the-route">Step 2: Create the Route</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-3-implement-the-handler">Step 3: Implement the Handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-4-add-guard-configuration">Step 4: Add Guard Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-5-update-the-feature-matrix">Step 5: Update the Feature Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-6-connect-to-the-patient-app">Step 6: Connect to the Patient App</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-7-test">Step 7: Test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#ai-service-tests">AI Service Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#patient-portal-native-tests">Patient Portal Native Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#testing-fhir-integrations">Testing FHIR Integrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#smoke-testing-the-full-stack">Smoke Testing the Full Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#continuous-integration">Continuous Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html">Extending OpenEMR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#extension-philosophy">Extension Philosophy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#project-layout">Project Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#adding-a-custom-module">Adding a Custom Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#using-the-openemr-eventdispatcher">Using the OpenEMR EventDispatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#calling-the-med-seal-ai-service-from-openemr">Calling the Med-SEAL AI Service from OpenEMR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#database-changes">Database Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#updating-openemr">Updating OpenEMR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/extending-openemr.html#acl-access-control">ACL (Access Control)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/environment-setup.html">Environment Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#repository-clone">Repository Clone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#docker-compose-stack">Docker Compose Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#ai-service-local-development">AI Service (Local Development)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#patient-portal-native-mobile-dev">Patient Portal Native (Mobile Dev)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#ai-frontend-admin-dashboard">AI Frontend (Admin Dashboard)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#seeding-data">Seeding Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#connecting-to-services">Connecting to Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/environment-setup.html#rebuilding-custom-images">Rebuilding Custom Images</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/fhir-data-model.html">FHIR Data Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#key-fhir-resources">Key FHIR Resources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#fhir-domain-model-class-diagram">FHIR Domain Model (Class Diagram)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#reading-fhir-data">Reading FHIR Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#using-the-medplum-typescript-sdk">Using the Medplum TypeScript SDK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#raw-fhir-rest">Raw FHIR REST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#writing-fhir-data">Writing FHIR Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#creating-a-resource">Creating a Resource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/fhir-data-model.html#updating-a-resource">Updating a Resource</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#coding-systems">Coding Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#med-seal-conventions">Med-SEAL Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/fhir-data-model.html#fhir-subscriptions">FHIR Subscriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/api-reference.html">AI Service API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#request-lifecycle-sequence-diagram">Request Lifecycle (Sequence Diagram)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#health-check">Health Check</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#get-health"><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#chat-companion-agent-a1">Chat (Companion Agent A1)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#post-chat"><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/chat</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#nudges-nudge-agent-a3">Nudges (Nudge Agent A3)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#get-nudges-patientid"><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/nudges/:patientId</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#post-nudges-patientid-dismiss"><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/nudges/:patientId/dismiss</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#pre-visit-summary-insight-agent-a5">Pre-Visit Summary (Insight Agent A5)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#post-patients-id-previsit-summary"><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/patients/:id/previsit-summary</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#adherence-metrics-measurement-agent-a6">Adherence Metrics (Measurement Agent A6)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/api-reference.html#get-metrics-patientid-adherence"><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/metrics/:patientId/adherence</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/api-reference.html#error-responses">Error Responses</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/adding-ai-features.html">Adding a New AI Feature</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-1-define-your-feature">Step 1: Define Your Feature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-2-create-the-route">Step 2: Create the Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-3-implement-the-handler">Step 3: Implement the Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-4-add-guard-configuration">Step 4: Add Guard Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-5-update-the-feature-matrix">Step 5: Update the Feature Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-6-connect-to-the-patient-app">Step 6: Connect to the Patient App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/adding-ai-features.html#step-7-test">Step 7: Test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/testing.html">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#ai-service-tests">AI Service Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#run-all-tests">Run All Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#run-with-coverage">Run with Coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#unit-tests">Unit Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#integration-tests">Integration Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#patient-portal-native-tests">Patient Portal Native Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#unit-and-component-tests">Unit and Component Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer-guide/testing.html#e2e-tests-detox">E2E Tests (Detox)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#testing-fhir-integrations">Testing FHIR Integrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#smoke-testing-the-full-stack">Smoke Testing the Full Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/testing.html#continuous-integration">Continuous Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer-guide/extending-openemr.html">Extending OpenEMR</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#extension-philosophy">Extension Philosophy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#project-layout">Project Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#adding-a-custom-module">Adding a Custom Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#using-the-openemr-eventdispatcher">Using the OpenEMR EventDispatcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#calling-the-med-seal-ai-service-from-openemr">Calling the Med-SEAL AI Service from OpenEMR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#database-changes">Database Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#updating-openemr">Updating OpenEMR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer-guide/extending-openemr.html#acl-access-control">ACL (Access Control)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Med-SEAL Suite</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AI Agent — Implementation &amp; GCP Cloud Run Deployment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/ai-agents/azure-deployment.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ai-agent-implementation-gcp-cloud-run-deployment">
+<h1>AI Agent — Implementation &amp; GCP Cloud Run Deployment<a class="headerlink" href="#ai-agent-implementation-gcp-cloud-run-deployment" title="Link to this heading"></a></h1>
+<p>This page documents the implementation architecture and <strong>GCP Cloud Run</strong> deployment of the <strong>Med-SEAL AI Agent</strong> — the multi-agent clinical reasoning service that powers the platform’s 18 smart healthcare features.</p>
+<hr class="docutils" />
+<section id="implementation-overview">
+<h2>1. Implementation Overview<a class="headerlink" href="#implementation-overview" title="Link to this heading"></a></h2>
+<section id="technology-stack">
+<h3>1.1 Technology Stack<a class="headerlink" href="#technology-stack" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Technology</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Runtime</strong></p></td>
+<td><p>Python 3.11</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Web framework</strong></p></td>
+<td><p>FastAPI + Uvicorn</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Agent framework</strong></p></td>
+<td><p>LangGraph (LangChain)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Clinical LLM</strong></p></td>
+<td><p>SEA-LION v4-32B (AI Singapore)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Conversation model</strong></p></td>
+<td><p>SEA-LION v4 (AI Singapore)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Safety guard</strong></p></td>
+<td><p>SEA-Guard (AI Singapore)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>FHIR client</strong></p></td>
+<td><p>Medplum (custom <code class="docutils literal notranslate"><span class="pre">httpx</span></code>-based client)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Session persistence</strong></p></td>
+<td><p>SQLite (via <code class="docutils literal notranslate"><span class="pre">langgraph-checkpoint-sqlite</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Containerisation</strong></p></td>
+<td><p>Docker (<code class="docutils literal notranslate"><span class="pre">python:3.11-slim</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cloud hosting</strong></p></td>
+<td><p>GCP Cloud Run (Singapore, <code class="docutils literal notranslate"><span class="pre">asia-southeast1</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Infrastructure</strong></p></td>
+<td><p>GKE (<code class="docutils literal notranslate"><span class="pre">medseal-cluster</span></code>) for full stack</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="agent-roster">
+<h3>1.2 Agent Roster<a class="headerlink" href="#agent-roster" title="Link to this heading"></a></h3>
+<p>The system builds and registers 7 LangGraph agent graphs at startup:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Agent ID</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">companion-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.companion</span></code></p></td>
+<td><p>Patient-facing conversational interface</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">clinical-reasoning-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.clinical</span></code></p></td>
+<td><p>Clinical reasoning (drug interactions, lab interpretation)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">doctor-cds-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.doctor_cds</span></code></p></td>
+<td><p>OpenEMR clinician chat &amp; decision support</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nudge-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.nudge</span></code></p></td>
+<td><p>Proactive reminders and escalation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lifestyle-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.lifestyle</span></code></p></td>
+<td><p>Dietary and lifestyle coaching</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">insight-synthesis-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.insight</span></code></p></td>
+<td><p>Pre-visit brief synthesis</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">previsit-summary-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">agent.agents.previsit</span></code></p></td>
+<td><p>FHIR-based pre-visit data aggregation</p></td>
+</tr>
+</tbody>
+</table>
+<p>Each agent is a compiled LangGraph <code class="docutils literal notranslate"><span class="pre">StateGraph</span></code> with its own tools, system prompt, and checkpointer.</p>
+</section>
+<section id="llm-backend-dual-mode">
+<h3>1.3 LLM Backend — Dual Mode<a class="headerlink" href="#llm-backend-dual-mode" title="Link to this heading"></a></h3>
+<p>The system supports two LLM backends via the <strong>LLM Factory</strong> (<code class="docutils literal notranslate"><span class="pre">agent/core/llm_factory.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># config.py — defaults to SEA-LION</span>
+<span class="n">clinical_llm_backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;azure&quot;</span>  <span class="c1"># or &quot;vllm&quot; for Med-SEAL V1</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Backend</p></th>
+<th class="head"><p>Model</p></th>
+<th class="head"><p>When</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">azure</span></code> <em>(current)</em></p></td>
+<td><p>SEA-LION v4-32B via API</p></td>
+<td><p>Qwen-SEA-LION-v4-32B-IT</p></td>
+<td><p>Production — no GPU needed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vllm</span></code></p></td>
+<td><p>Self-hosted vLLM</p></td>
+<td><p><a class="reference external" href="https://huggingface.co/aagdeyogipramana/Med-SEAL-V1"><code class="docutils literal notranslate"><span class="pre">aagdeyogipramana/Med-SEAL-V1</span></code></a></p></td>
+<td><p>Future — requires 2× H200 GPU</p></td>
+</tr>
+</tbody>
+</table>
+<p>Switching is a single env var change: <code class="docutils literal notranslate"><span class="pre">MEDSEAL_CLINICAL_LLM_BACKEND=vllm</span></code>.</p>
+</section>
+<section id="api-endpoints">
+<h3>1.4 API Endpoints<a class="headerlink" href="#api-endpoints" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Path</p></th>
+<th class="head"><p>Surface</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sessions</span></code></p></td>
+<td><p>Patient</p></td>
+<td><p>Create new chat session</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sessions/{id}/messages</span></code></p></td>
+<td><p>Patient</p></td>
+<td><p>Send message (sync)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sessions/{id}/messages/stream</span></code></p></td>
+<td><p>Patient</p></td>
+<td><p>Send message (SSE streaming)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sessions/{id}/messages</span></code></p></td>
+<td><p>Patient</p></td>
+<td><p>Get conversation history</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sessions/{id}</span></code></p></td>
+<td><p>Patient</p></td>
+<td><p>Delete session</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/patients/{id}/previsit-summary</span></code></p></td>
+<td><p>Clinician</p></td>
+<td><p>Generate pre-visit summary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/openemr/sessions/{id}/chat</span></code></p></td>
+<td><p>Clinician</p></td>
+<td><p>Doctor chat (SSE)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/openemr/sessions/{id}/chat/sync</span></code></p></td>
+<td><p>Clinician</p></td>
+<td><p>Doctor chat (sync)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/cds-services/patient-view</span></code></p></td>
+<td><p>CDS Hooks</p></td>
+<td><p>Trigger insight synthesis</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">POST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/triggers/{type}</span></code></p></td>
+<td><p>System</p></td>
+<td><p>Fire nudge/measurement triggers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/agents</span></code></p></td>
+<td><p>Admin</p></td>
+<td><p>List registered agents</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/agents/{id}/health</span></code></p></td>
+<td><p>Admin</p></td>
+<td><p>Agent health check</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/health</span></code></p></td>
+<td><p>Admin</p></td>
+<td><p>System health check</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="external-dependencies">
+<h3>1.5 External Dependencies<a class="headerlink" href="#external-dependencies" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>Endpoint</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>SEA-LION API</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">api.sea-lion.ai/v1</span></code></p></td>
+<td><p>Clinical reasoning + Conversation + Guard</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Medplum FHIR</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fhir.medseal.34.54.226.15.nip.io/fhir/R4</span></code></p></td>
+<td><p>Patient health records (GKE)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="project-structure">
+<h2>2. Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>agent/
+├── main.py                      # FastAPI app, lifespan, agent graph compilation
+├── config.py                    # Pydantic Settings (env vars, MEDSEAL_ prefix)
+├── agents/                      # LangGraph agent definitions
+│   ├── companion.py             #   A1 — patient conversation
+│   ├── clinical.py              #   A2 — clinical reasoning
+│   ├── doctor_cds.py            #   Doctor chat + CDS
+│   ├── nudge.py                 #   A3 — proactive nudges
+│   ├── lifestyle.py             #   A4 — dietary coaching
+│   ├── insight.py               #   A5 — insight synthesis
+│   ├── previsit.py              #   Pre-visit summary
+│   └── measurement.py           #   A6 — analytics
+├── api/
+│   └── routes.py                # All FastAPI route handlers
+├── core/
+│   ├── orchestrator.py          # Intent classification + agent routing
+│   ├── guard.py                 # SEA-LION Guard (input/output safety)
+│   ├── llm_factory.py           # SEA-LION / vLLM backend selector
+│   ├── graph.py                 # Legacy agent graph
+│   ├── identity.py              # Agent identity definitions
+│   ├── language.py              # Language detection
+│   └── router.py                # Message routing logic
+└── tools/
+    ├── fhir_client.py           # Medplum FHIR client (httpx)
+    ├── fhir_tools_clinical.py   # FHIR tools for A2
+    ├── fhir_tools_companion.py  # FHIR tools for A1
+    ├── fhir_tools_nudge.py      # FHIR tools for A3
+    ├── fhir_tools_lifestyle.py  # FHIR tools for A4
+    ├── fhir_tools_insight.py    # FHIR tools for A5
+    ├── fhir_tools_previsit.py   # FHIR tools for pre-visit
+    ├── fhir_tools_measurement.py # FHIR tools for A6
+    ├── fhir_tools_appointment.py # Appointment management
+    └── medical_tools.py         # Medical knowledge tools
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="gcp-cloud-run-deployment">
+<h2>3. GCP Cloud Run Deployment<a class="headerlink" href="#gcp-cloud-run-deployment" title="Link to this heading"></a></h2>
+<section id="gcp-resources">
+<h3>3.1 GCP Resources<a class="headerlink" href="#gcp-resources" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Configuration</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Project</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gen-lang-client-0538005727</span></code></p></td>
+<td><p>Gemini Project1</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cloud Run Service</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">medseal-agent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">asia-southeast1</span></code> (Singapore)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>GKE Cluster</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">medseal-cluster</span></code></p></td>
+<td><p>2× <code class="docutils literal notranslate"><span class="pre">ek-standard-8</span></code> nodes</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Artifact Registry</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cloud-run-source-deploy</span></code></p></td>
+<td><p>Docker images</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Ingress IP</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">34.54.226.15</span></code></p></td>
+<td><p>GKE external load balancer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="environment-variables">
+<h3>3.2 Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clinical LLM (SEA-LION)</span>
+<span class="nv">MEDSEAL_CLINICAL_LLM_BACKEND</span><span class="o">=</span>azure
+<span class="nv">MEDSEAL_SEALION_API_URL</span><span class="o">=</span>https://api.sea-lion.ai/v1
+<span class="nv">MEDSEAL_SEALION_API_KEY</span><span class="o">=</span>&lt;your-sea-lion-key&gt;
+<span class="nv">MEDSEAL_SEALION_MODEL</span><span class="o">=</span>aisingapore/Qwen-SEA-LION-v4-32B-IT
+<span class="nv">MEDSEAL_SEAGUARD_MODEL</span><span class="o">=</span>aisingapore/SEA-Guard
+
+<span class="c1"># Medplum FHIR (GKE)</span>
+<span class="nv">MEDSEAL_MEDPLUM_URL</span><span class="o">=</span>http://fhir.medseal.34.54.226.15.nip.io/fhir/R4
+<span class="nv">MEDSEAL_MEDPLUM_EMAIL</span><span class="o">=</span>admin@example.com
+<span class="nv">MEDSEAL_MEDPLUM_PASSWORD</span><span class="o">=</span>medplum_admin
+
+<span class="c1"># App behaviour</span>
+<span class="nv">MEDSEAL_MAX_RECURSION</span><span class="o">=</span><span class="m">5</span>
+<span class="nv">MEDSEAL_TEMPERATURE</span><span class="o">=</span><span class="m">0</span>.6
+</pre></div>
+</div>
+</section>
+<section id="startup-command">
+<h3>3.3 Startup Command<a class="headerlink" href="#startup-command" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uvicorn<span class="w"> </span>agent.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div>
+</section>
+<section id="deployment-steps">
+<h3>3.4 Deployment Steps<a class="headerlink" href="#deployment-steps" title="Link to this heading"></a></h3>
+<section id="prerequisites">
+<h4>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Google Cloud SDK (<code class="docutils literal notranslate"><span class="pre">gcloud</span></code>) installed and authenticated</p></li>
+<li><p>GCP project with billing enabled</p></li>
+<li><p>Access to SEA-LION API (AI Singapore)</p></li>
+</ul>
+</section>
+<section id="step-1-authenticate-configure-project">
+<h4>Step 1: Authenticate &amp; Configure Project<a class="headerlink" href="#step-1-authenticate-configure-project" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/google-cloud-sdk/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+gcloud<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--no-launch-browser
+gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span>gen-lang-client-0538005727
+</pre></div>
+</div>
+</section>
+<section id="step-2-enable-required-apis">
+<h4>Step 2: Enable Required APIs<a class="headerlink" href="#step-2-enable-required-apis" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>run.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>cloudbuild.googleapis.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>artifactregistry.googleapis.com
+</pre></div>
+</div>
+</section>
+<section id="step-3-deploy-from-source">
+<h4>Step 3: Deploy from Source<a class="headerlink" href="#step-3-deploy-from-source" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcloud<span class="w"> </span>run<span class="w"> </span>deploy<span class="w"> </span>medseal-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--source<span class="w"> </span>/path/to/Med-SEAL<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="w"> </span>asia-southeast1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--memory<span class="w"> </span>1Gi<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cpu<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--timeout<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--allow-unauthenticated<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set-env-vars<span class="o">=</span><span class="s2">&quot;\</span>
+<span class="s2">MEDSEAL_SEALION_API_KEY=&lt;key&gt;,\</span>
+<span class="s2">MEDSEAL_MEDPLUM_URL=http://fhir.medseal.34.54.226.15.nip.io/fhir/R4&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--quiet
+</pre></div>
+</div>
+</section>
+<section id="step-4-verify">
+<h4>Step 4: Verify<a class="headerlink" href="#step-4-verify" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Health check</span>
+curl<span class="w"> </span>https://medseal-agent-74997794842.asia-southeast1.run.app/health
+
+<span class="c1"># List agents</span>
+curl<span class="w"> </span>https://medseal-agent-74997794842.asia-southeast1.run.app/agents
+</pre></div>
+</div>
+<p>Expected health response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;vllm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unreachable&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;redis&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;medplum&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">vllm:</span> <span class="pre">unreachable</span></code> is expected — Med-SEAL V1 (<code class="docutils literal notranslate"><span class="pre">med-r1</span></code>) is not deployed. The system uses SEA-LION via API instead.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="dockerfile">
+<h3>3.5 Dockerfile<a class="headerlink" href="#dockerfile" title="Link to this heading"></a></h3>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>build-essential<span class="w"> </span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>agent/requirements_agent.txt<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements_agent.txt
+
+<span class="k">COPY</span><span class="w"> </span>agent<span class="w"> </span>/app/agent
+
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>/app
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;agent.main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="requirements-deployment">
+<h3>3.6 Requirements (Deployment)<a class="headerlink" href="#requirements-deployment" title="Link to this heading"></a></h3>
+<p>The slim deployment requirements (<code class="docutils literal notranslate"><span class="pre">requirements_deploy.txt</span></code>) include only runtime dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fastapi</span><span class="o">&gt;=</span><span class="mf">0.115</span>
+<span class="n">uvicorn</span><span class="p">[</span><span class="n">standard</span><span class="p">]</span>
+<span class="n">pydantic</span><span class="o">-</span><span class="n">settings</span>
+<span class="n">langchain</span><span class="o">&gt;=</span><span class="mf">0.3</span>
+<span class="n">langchain</span><span class="o">-</span><span class="n">openai</span>
+<span class="n">langchain</span><span class="o">-</span><span class="n">community</span>
+<span class="n">langgraph</span><span class="o">&gt;=</span><span class="mf">0.2.70</span>
+<span class="n">langgraph</span><span class="o">-</span><span class="n">checkpoint</span><span class="o">-</span><span class="n">redis</span>
+<span class="n">langdetect</span>
+<span class="n">ddgs</span>
+<span class="n">httpx</span>
+<span class="n">sqlalchemy</span>
+<span class="n">aiosqlite</span>
+</pre></div>
+</div>
+<p>Training dependencies (PyTorch, transformers, datasets, etc.) are excluded to keep the deployment package small.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="architecture-diagram">
+<h2>4. Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│              GCP Cloud Run (asia-southeast1)                 │
+│                                                             │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │              FastAPI (uvicorn :8000)                    │ │
+│  │                                                        │ │
+│  │  /sessions/*          → Orchestrator → Agent Router    │ │
+│  │  /openemr/sessions/*  → Orchestrator → Doctor CDS      │ │
+│  │  /cds-services/*      → Orchestrator → Insight Agent   │ │
+│  │  /triggers/*          → Orchestrator → Nudge Agent     │ │
+│  │  /patients/*/previsit → Previsit Agent                 │ │
+│  │                                                        │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │ │
+│  │  │ Companion A1 │  │ Clinical A2  │  │ Doctor CDS  │  │ │
+│  │  │ Lifestyle A4 │  │  Nudge A3    │  │ Insight A5  │  │ │
+│  │  │ Previsit     │  │ Measurement  │  │   Guard     │  │ │
+│  │  └──────────────┘  └──────────────┘  └─────────────┘  │ │
+│  │                                                        │ │
+│  │  SQLite (medseal_sessions.db) — session checkpointing  │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────┬──────────────────┬──────────────────┬─────────────┘
+          │                  │                  │
+    ┌─────▼─────┐    ┌──────▼──────┐    ┌──────▼──────┐
+    │ SEA-LION   │    │  SEA-Guard  │    │   Medplum   │
+    │ v4-32B     │    │ Safety LLM  │    │  FHIR R4    │
+    │(clinical + │    │ api.sea-lion│    │ (GKE)       │
+    │ companion) │    │ .ai/v1      │    │             │
+    └────────────┘    └─────────────┘    └─────────────┘
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="monitoring-troubleshooting">
+<h2>5. Monitoring &amp; Troubleshooting<a class="headerlink" href="#monitoring-troubleshooting" title="Link to this heading"></a></h2>
+<section id="logs">
+<h3>5.1 Logs<a class="headerlink" href="#logs" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cloud Run logs</span>
+gcloud<span class="w"> </span>run<span class="w"> </span>services<span class="w"> </span>logs<span class="w"> </span><span class="nb">read</span><span class="w"> </span>medseal-agent<span class="w"> </span>--region<span class="w"> </span>asia-southeast1<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
+
+<span class="c1"># GKE pod logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>medseal<span class="w"> </span>deployment/ai-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+</pre></div>
+</div>
+</section>
+<section id="common-issues">
+<h3>5.2 Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Issue</p></th>
+<th class="head"><p>Cause</p></th>
+<th class="head"><p>Fix</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vllm:</span> <span class="pre">unreachable</span></code> in health</p></td>
+<td><p>Expected — Med-SEAL V1 not deployed</p></td>
+<td><p>No action; SEA-LION handles clinical LLM</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">medplum:</span> <span class="pre">unreachable</span></code></p></td>
+<td><p>GKE FHIR server down or URL misconfigured</p></td>
+<td><p>Check GKE pods: <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">get</span> <span class="pre">pods</span> <span class="pre">-n</span> <span class="pre">medseal</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">STARTUP</span> <span class="pre">FAILED</span> <span class="pre">—</span> <span class="pre">running</span> <span class="pre">in</span> <span class="pre">degraded</span> <span class="pre">mode</span></code></p></td>
+<td><p>Missing env vars or API key issues</p></td>
+<td><p>Check <code class="docutils literal notranslate"><span class="pre">MEDSEAL_*</span></code> env vars in Cloud Run</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SEA-LION</span> <span class="pre">API</span> <span class="pre">timeout</span></code></p></td>
+<td><p>Rate limit or network issue</p></td>
+<td><p>Retry; check SEA-LION API status</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SQLite</span> <span class="pre">checkpointer</span> <span class="pre">unavailable</span></code></p></td>
+<td><p>File permission or dependency issue</p></td>
+<td><p>Falls back to in-memory MemorySaver; sessions won’t persist across restarts</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scaling">
+<h3>5.3 Scaling<a class="headerlink" href="#scaling" title="Link to this heading"></a></h3>
+<p>Cloud Run auto-scales based on traffic. To adjust limits:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update CPU/memory</span>
+gcloud<span class="w"> </span>run<span class="w"> </span>services<span class="w"> </span>update<span class="w"> </span>medseal-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="w"> </span>asia-southeast1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cpu<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--memory<span class="w"> </span>2Gi
+
+<span class="c1"># Set max instances</span>
+gcloud<span class="w"> </span>run<span class="w"> </span>services<span class="w"> </span>update<span class="w"> </span>medseal-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="w"> </span>asia-southeast1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-instances<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Note:</strong> When scaling to multiple instances, switch session persistence from SQLite to Redis (<code class="docutils literal notranslate"><span class="pre">MEDSEAL_REDIS_URL</span></code>) since SQLite is per-instance.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="live-deployment-urls">
+<h2>6. Live Deployment URLs<a class="headerlink" href="#live-deployment-urls" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>URL</p></th>
+<th class="head"><p>Platform</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>AI Agent (API)</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">https://medseal-agent-74997794842.asia-southeast1.run.app</span></code></p></td>
+<td><p>Cloud Run</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Swagger UI</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">https://medseal-agent-74997794842.asia-southeast1.run.app/docs</span></code></p></td>
+<td><p>Cloud Run</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Patient App</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">app.medseal.34.54.226.15.nip.io</span></code></p></td>
+<td><p>GKE</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>FHIR Server</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fhir.medseal.34.54.226.15.nip.io</span></code></p></td>
+<td><p>GKE</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>OpenEMR</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emr.medseal.34.54.226.15.nip.io</span></code></p></td>
+<td><p>GKE</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Medplum Admin</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">medplum.medseal.34.54.226.15.nip.io</span></code></p></td>
+<td><p>GKE</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="related-pages">
+<h2>7. Related Pages<a class="headerlink" href="#related-pages" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../technical-report-v1.html"><span class="doc">Med-SEAL V1 Technical Report</span></a> — Med-SEAL V1 base model (<a class="reference external" href="https://huggingface.co/aagdeyogipramana/Med-SEAL-V1"><code class="docutils literal notranslate"><span class="pre">aagdeyogipramana/Med-SEAL-V1</span></code></a>) technical report</p></li>
+<li><p><a class="reference internal" href="overview.html"><span class="doc">AI Agents Overview</span></a> — Multi-agent roster and orchestration</p></li>
+<li><p><a class="reference internal" href="../architecture.html"><span class="doc">Architecture</span></a> — Full system architecture</p></li>
+<li><p><a class="reference internal" href="gcp-deployment.html"><span class="doc">GCP Deployment Guide</span></a> — Detailed GCP deployment guide</p></li>
+<li><p><a class="reference internal" href="../developer-guide/api-reference.html"><span class="doc">AI Service API Reference</span></a> — REST API reference</p></li>
+<li><p><a class="reference internal" href="../developer-guide/environment-setup.html"><span class="doc">Environment Setup</span></a> — Local development setup</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="clinical-agent.html" class="btn btn-neutral float-left" title="Med-SEAL V1 Clinical Agent" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gcp-deployment.html" class="btn btn-neutral float-right" title="GCP Deployment Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025–2026, IgoyAI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

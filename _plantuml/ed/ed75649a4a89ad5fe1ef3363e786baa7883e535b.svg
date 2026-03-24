@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="523px" preserveAspectRatio="none" style="width:1211px;height:523px;" version="1.1" viewBox="0 0 1211 523" width="1211px" zoomAndPan="magnify"><defs><filter height="300%" id="f1mt9p98xnz91i" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[9dd4eaa2771a2ff8dbee15cc1e732cab]
+class Patient--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="116.7969" id="Patient" style="stroke: #A80036; stroke-width: 1.5;" width="148" x="735" y="8"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="45" x="786.5" y="24.1387">Patient</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="736" x2="882" y1="31.9688" y2="31.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="741" y="46.1792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="125" x="741" y="58.9839">name : HumanName[]</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="89" x="741" y="71.7886">birthDate : date</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="79" x="741" y="84.5933">gender : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="136" x="741" y="97.3979">telecom : ContactPoint[]</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="736" x2="882" y1="103.9922" y2="103.9922"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="101" x="741" y="118.2026">«PHI - Restricted»</text><!--MD5=[2edc31ff762501c9cec4b1b863028f54]
+class Practitioner--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="78.3828" id="Practitioner" style="stroke: #A80036; stroke-width: 1.5;" width="137" x="367.5" y="415.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="73" x="399.5" y="431.6387">Practitioner</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="368.5" x2="503.5" y1="439.4688" y2="439.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="373.5" y="453.6792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="125" x="373.5" y="466.4839">name : HumanName[]</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="115" x="373.5" y="479.2886">qualification : code[]</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="368.5" x2="503.5" y1="485.8828" y2="485.8828"/><!--MD5=[0a005aa698e1f18d1a2bb4de0df49e47]
+class Encounter--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="103.9922" id="Encounter" style="stroke: #A80036; stroke-width: 1.5;" width="200" x="582" y="208.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="65" x="649.5" y="224.6387">Encounter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="583" x2="781" y1="232.4688" y2="232.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="588" y="246.6792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="588" y="259.4839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="81" x="588" y="272.2886">class : Coding</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="84" x="588" y="285.0933">period : Period</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="188" x="588" y="297.8979">reasonCode : CodeableConcept[]</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="583" x2="781" y1="304.4922" y2="304.4922"/><!--MD5=[a030fa97ffb865708cae79f6847e8968]
+class Condition--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="91.1875" id="Condition" style="stroke: #A80036; stroke-width: 1.5;" width="163" x="837.5" y="409"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="59" x="889.5" y="425.1387">Condition</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="838.5" x2="999.5" y1="432.9688" y2="432.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="843.5" y="447.1792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="114" x="843.5" y="459.9839">clinicalStatus : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="138" x="843.5" y="472.7886">code : CodeableConcept</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="151" x="843.5" y="485.5933">onsetDateTime : dateTime</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="838.5" x2="999.5" y1="492.1875" y2="492.1875"/><!--MD5=[6809e86e755f4447eafc862e6665c90b]
+class MedicationRequest--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="91.1875" id="MedicationRequest" style="stroke: #A80036; stroke-width: 1.5;" width="284" x="6" y="215"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="120" x="88" y="231.1387">MedicationRequest</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="289" y1="238.9688" y2="238.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="12" y="253.1792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="12" y="265.9839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="272" x="12" y="278.7886">medicationCodeableConcept : CodeableConcept</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="165" x="12" y="291.5933">dosageInstruction : Dosage[]</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="289" y1="298.1875" y2="298.1875"/><!--MD5=[b8f895e9bf81b1f4c2e3d3f62df74bc4]
+class MedicationAdministration--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="78.3828" id="MedicationAdministration" style="stroke: #A80036; stroke-width: 1.5;" width="179" x="58.5" y="415.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="158" x="69" y="431.6387">MedicationAdministration</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="59.5" x2="236.5" y1="439.4688" y2="439.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="64.5" y="453.6792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="64.5" y="466.4839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="167" x="64.5" y="479.2886">effectiveDateTime : dateTime</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="59.5" x2="236.5" y1="485.8828" y2="485.8828"/><!--MD5=[26df59e6d290f1279cec908f1e9a1b5f]
+class Observation--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="116.7969" id="Observation" style="stroke: #A80036; stroke-width: 1.5;" width="180" x="602" y="396"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="75" x="654.5" y="412.1387">Observation</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="603" x2="781" y1="419.9688" y2="419.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="608" y="434.1792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="608" y="446.9839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="168" x="608" y="459.7886">category : CodeableConcept[]</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="138" x="608" y="472.5933">code : CodeableConcept</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="136" x="608" y="485.3979">valueQuantity : Quantity</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="167" x="608" y="498.2026">effectiveDateTime : dateTime</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="603" x2="781" y1="504.7969" y2="504.7969"/><!--MD5=[c508b5b6bbe276ff5e2700b6641f837f]
+class Appointment--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="103.9922" id="Appointment" style="stroke: #A80036; stroke-width: 1.5;" width="221" x="325.5" y="208.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="80" x="396" y="224.6387">Appointment</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="326.5" x2="545.5" y1="232.4688" y2="232.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="331.5" y="246.6792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="331.5" y="259.4839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="78" x="331.5" y="272.2886">start : instant</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="72" x="331.5" y="285.0933">end : instant</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="209" x="331.5" y="297.8979">appointmentType : CodeableConcept</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="326.5" x2="545.5" y1="304.4922" y2="304.4922"/><!--MD5=[251454e98c15f29849fb35b1904d0020]
+class Composition--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="116.7969" id="Composition" style="stroke: #A80036; stroke-width: 1.5;" width="147" x="1053.5" y="202"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="77" x="1088.5" y="218.1387">Composition</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1054.5" x2="1199.5" y1="225.9688" y2="225.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="1059.5" y="240.1792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="1059.5" y="252.9839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="135" x="1059.5" y="265.7886">type : CodeableConcept</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="90" x="1059.5" y="278.5933">date : dateTime</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="103" x="1059.5" y="291.3979">section : Section[]</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="1054.5" x2="1199.5" y1="297.9922" y2="297.9922"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="108" x="1059.5" y="312.2026">«AI-generated tag»</text><!--MD5=[3df3f66e830477886cffba2d9a6d3644]
+class MeasureReport--><rect fill="#FEFECE" filter="url(#f1mt9p98xnz91i)" height="103.9922" id="MeasureReport" style="stroke: #A80036; stroke-width: 1.5;" width="102" x="1076" y="402.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="96" x="1079" y="418.6387">MeasureReport</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1077" x2="1177" y1="426.4688" y2="426.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="55" x="1082" y="440.6792">id : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="1082" y="453.4839">status : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="63" x="1082" y="466.2886">type : code</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="84" x="1082" y="479.0933">period : Period</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="88" x="1082" y="491.8979">group : Group[]</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1077" x2="1177" y1="498.4922" y2="498.4922"/><!--MD5=[7d3eca8af4405608f5d070395f705c9e]
+link Patient to Encounter--><path d="M770.9,125.11 C754.32,150.17 734.98,179.41 718.58,204.2 " fill="none" id="Patient-&gt;Encounter" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="715.76,208.46,724.0596,203.1574,718.517,204.2888,717.3856,198.7462,715.76,208.46" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="751" y="168.0669">subject</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="758.0322" y="144.8403">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="695.7512" y="197.5357">0..*</text><!--MD5=[5f3eabbd397b347e2a56f0082e6eac4c]
+link Patient to Condition--><path d="M864.23,125 C881.91,147.25 899.18,174.08 908,202 C929.25,269.29 928.07,351.74 924.3,403.46 " fill="none" id="Patient-&gt;Condition" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="923.91,408.68,928.5923,400.0153,924.2957,403.6949,920.6161,399.3983,923.91,408.68" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="927" y="265.0669">subject</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="862.1535" y="144.7176">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="899.9421" y="397.9115">0..*</text><!--MD5=[a8d9c74247235977618c7a792d8df8db]
+link Patient to MedicationRequest--><path d="M734.6,85.43 C636.27,109.59 457.96,155.01 308,202 C296.79,205.51 285.19,209.33 273.6,213.26 " fill="none" id="Patient-&gt;MedicationRequest" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="268.64,214.95,278.4497,215.8278,273.3719,213.3346,275.865,208.2568,268.64,214.95" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="460" y="168.0669">subject</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="718.8825" y="83.6386">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="262.3521" y="203.8894">0..*</text><!--MD5=[3eb8b5648b04ee9f44ad5d1b7a21793a]
+link Patient to Observation--><path d="M820.38,125.32 C833.9,200.23 852,326 830,366 C819.85,384.45 803.99,399.55 786.58,411.7 " fill="none" id="Patient-&gt;Observation" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="782.13,414.73,791.8224,412.9815,786.266,411.9204,787.327,406.364,782.13,414.73" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="842" y="265.0669">subject</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="813.1872" y="144.659">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="789.911" y="408.1906">0..*</text><!--MD5=[769704aea6c8338c742acf0d6f000464]
+link Patient to Appointment--><path d="M734.86,105.66 C679.06,134.39 601.86,174.13 539.9,206.02 " fill="none" id="Patient-&gt;Appointment" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="535.09,208.49,544.9229,207.9296,539.5361,206.2026,541.2631,200.8158,535.09,208.49" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="635" y="168.0669">participant</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="718.8018" y="106.0092">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="523.8599" y="197.5697">0..*</text><!--MD5=[0061101ea533c3a5a7b300c0df7429e3]
+link Patient to Composition--><path d="M883.01,97.32 C918.25,112.71 960.37,132.88 996,155 C1016.57,167.77 1037.6,183.27 1056.63,198.39 " fill="none" id="Patient-&gt;Composition" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1060.91,201.81,1056.3576,193.0764,1056.9973,198.697,1051.3767,199.3367,1060.91,201.81" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="1020" y="168.0669">subject</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="891.0548" y="96.8091">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="1028.4537" y="190.8305">0..*</text><!--MD5=[aaf4183bf7b0015719274dd652a5ddc7]
+link Encounter to Condition--><path d="M745.2,312.7 C780.78,341.52 824.93,377.29 859.83,405.56 " fill="none" id="Encounter-&gt;Condition" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="864.04,408.97,859.5579,400.2001,860.1524,405.8257,854.5269,406.4202,864.04,408.97" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="48" x="809" y="362.0669">context</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="744.785" y="332.425">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="830.8633" y="397.9125">0..*</text><!--MD5=[82e0914b78000833a30139bd83f0cdf7]
+link Encounter to Observation--><path d="M670.48,312.54 C668.02,329.55 666.75,348.59 669,366 C670.03,374 671.58,382.31 673.39,390.48 " fill="none" id="Encounter-&gt;Observation" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="674.54,395.55,676.4386,385.8859,673.4282,390.6752,668.6389,387.6648,674.54,395.55" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="65" x="670" y="362.0669">encounter</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="660.3945" y="332.617">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="648.1915" y="384.953">0..*</text><!--MD5=[936a9204cf28b835c726dc54c6e8f916]
+link Encounter to Practitioner--><path d="M616.4,312.7 C576.57,343.78 526.4,382.94 489.08,412.07 " fill="none" id="Encounter-&gt;Practitioner" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="485.06,415.21,494.6181,412.8348,489.0045,412.1373,489.7019,406.5236,485.06,415.21" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="568" y="362.0669">participant</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="599.4825" y="332.425">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="484.5231" y="404.5066">1</text><!--MD5=[4640caa6b7258987191542f5a1180281]
+link MedicationRequest to MedicationAdministration--><path d="M148,306.03 C148,337.34 148,379.03 148,410.09 " fill="none" id="MedicationRequest-&gt;MedicationAdministration" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="148,415.37,152,406.37,148,410.37,144,406.37,148,415.37" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="49" x="149" y="362.0669">request</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="139.3875" y="326.2129">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="123.0234" y="404.4009">0..*</text><!--MD5=[6fa5b60583265615c6d086db4a201a64]
+link MedicationRequest to Practitioner--><path d="M214.8,306.03 C263.03,338.18 327.66,381.27 374.6,412.57 " fill="none" id="MedicationRequest-&gt;Practitioner" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="378.8,415.37,373.5303,407.0495,374.6397,412.5965,369.0927,413.7059,378.8,415.37" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="62" x="302" y="362.0669">requester</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="216.4163" y="326.2129">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="360.2813" y="404.4009">1</text><!--MD5=[e61ee79cab4bb6cb492434449e728e93]
+link Composition to MeasureReport--><path d="M1127,319.11 C1127,343.86 1127,372.68 1127,397.28 " fill="none" id="Composition-&gt;MeasureReport" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1127,402.46,1131,393.46,1127,397.46,1123,393.46,1127,402.46" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="1128" y="362.0669">references</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="1118.5375" y="338.8403">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="1102.4547" y="391.5357">0..*</text><!--MD5=[1bdaa15691074d4db8edab0041903a34]
+link Appointment to Practitioner--><path d="M436,312.7 C436,343.03 436,381.05 436,409.93 " fill="none" id="Appointment-&gt;Practitioner" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="436,415.21,440,406.21,436,410.21,432,406.21,436,415.21" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="437" y="362.0669">participant</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="23" x="411.5266" y="332.425">0..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="427.3375" y="404.5066">1</text><!--MD5=[76a8d5b1c1597ce4ae8c24016662edaa]
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+class Patient {
+  id : string
+  name : HumanName[]
+  birthDate : date
+  gender : code
+  telecom : ContactPoint[]
+  - -
+  <<PHI - Restricted>>
+}
+
+class Practitioner {
+  id : string
+  name : HumanName[]
+  qualification : code[]
+}
+
+class Encounter {
+  id : string
+  status : code
+  class : Coding
+  period : Period
+  reasonCode : CodeableConcept[]
+}
+
+class Condition {
+  id : string
+  clinicalStatus : code
+  code : CodeableConcept
+  onsetDateTime : dateTime
+}
+
+class MedicationRequest {
+  id : string
+  status : code
+  medicationCodeableConcept : CodeableConcept
+  dosageInstruction : Dosage[]
+}
+
+class MedicationAdministration {
+  id : string
+  status : code
+  effectiveDateTime : dateTime
+}
+
+class Observation {
+  id : string
+  status : code
+  category : CodeableConcept[]
+  code : CodeableConcept
+  valueQuantity : Quantity
+  effectiveDateTime : dateTime
+}
+
+class Appointment {
+  id : string
+  status : code
+  start : instant
+  end : instant
+  appointmentType : CodeableConcept
+}
+
+class Composition {
+  id : string
+  status : code
+  type : CodeableConcept
+  date : dateTime
+  section : Section[]
+  - -
+  <<AI-generated tag>>
+}
+
+class MeasureReport {
+  id : string
+  status : code
+  type : code
+  period : Period
+  group : Group[]
+}
+
+Patient "1" - -> "0..*" Encounter : subject
+Patient "1" - -> "0..*" Condition : subject
+Patient "1" - -> "0..*" MedicationRequest : subject
+Patient "1" - -> "0..*" Observation : subject
+Patient "1" - -> "0..*" Appointment : participant
+Patient "1" - -> "0..*" Composition : subject
+
+Encounter "1" - -> "0..*" Condition : context
+Encounter "1" - -> "0..*" Observation : encounter
+Encounter "1" - -> "1" Practitioner : participant
+
+MedicationRequest "1" - -> "0..*" MedicationAdministration : request
+MedicationRequest "1" - -> "1" Practitioner : requester
+
+Composition "1" - -> "0..*" MeasureReport : references
+
+Appointment "0..*" - -> "1" Practitioner : participant
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 17.0.18+8
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
