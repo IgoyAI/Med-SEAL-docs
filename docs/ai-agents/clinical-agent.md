@@ -2,7 +2,7 @@
 
 Med-SEAL V1 refers to **`med-r1`** — the fine-tuned **base model** that powers the clinical reasoning capabilities of the Med-SEAL platform.
 
-> **⚠️ Demo Note:** `med-r1` is **not deployed** in the live demo due to lack of GPU infrastructure (requires 2× NVIDIA H200). The demo uses **ChatGPT** (OpenAI API) as a drop-in substitute with the same prompt architecture and safety guards. See {doc}`../technical-report-v1` for the full technical report.
+> **Note:** `med-r1` is **not deployed** in the current system (requires 2× NVIDIA H200 GPUs). The production system uses **SEA-LION v4-32B** (AI Singapore's National LLM) as the clinical reasoning backend with the same prompt architecture and safety guards. See {doc}`../technical-report-v1` for the full technical report.
 
 ---
 
@@ -36,15 +36,16 @@ Other agents (A3, A4, A6) use different models (MERaLiON, SEA-LION, analytics en
 
 ---
 
-## Demo vs Production
+## Current vs Target Deployment
 
-| | Demo (current) | Production (target) |
+| | Current (SEA-LION) | Target (Med-SEAL V1) |
 |---|---|---|
-| **Model** | ChatGPT (GPT-4o) | `med-r1` (Qwen3-VL-8B fine-tuned) |
-| **Endpoint** | `api.openai.com` | `medseal-llm.ngrok-free.dev` |
+| **Model** | SEA-LION v4-32B (AI Singapore) | `med-r1` (Qwen3-VL-8B fine-tuned) |
+| **Endpoint** | `api.sea-lion.ai/v1` | Self-hosted vLLM |
 | **GPU** | None (cloud API) | 2× H200 |
-| **Clinical fine-tuning** | ❌ | ✅ |
+| **Clinical fine-tuning** | ❌ (general-purpose) | ✅ (chronic disease SFT) |
 | **Multimodal** | ❌ | ✅ (vision-language) |
+| **Platform** | GCP Cloud Run | GCP Cloud Run or GKE |
 
 Switching requires only environment variable changes — no code changes.
 

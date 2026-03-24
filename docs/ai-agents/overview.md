@@ -16,7 +16,7 @@ Med-SEAL Suite employs a **multi-agent AI architecture** where specialised agent
 | SYS | **SEA-LION Guard** | SEA-LION Guard | System-wide |
 | SYS | **smolagents Orchestrator** | Rule-based router | System-wide |
 
-> **⚠️ Demo Note:** **Med-SEAL V1** (`med-r1`) is the fine-tuned base model powering clinical reasoning. It is **not deployed** in the demo (no GPU infrastructure). **ChatGPT** is used as a substitute. See {doc}`clinical-agent` for details.
+> **Note:** **Med-SEAL V1** (`med-r1`) is the fine-tuned base model for clinical reasoning. In production, **SEA-LION v4-32B** (AI Singapore) is used as the clinical reasoning backend. When GPU infrastructure is available, `med-r1` can be deployed via vLLM. See {doc}`clinical-agent` for details.
 
 ### Agent Class Diagram
 
@@ -214,13 +214,21 @@ A system-wide safety layer that wraps all agent interactions:
 
 ## LLM Configuration
 
-The AI Service connects to a self-hosted LLM via:
+The AI Service connects to **SEA-LION v4-32B** (AI Singapore) for clinical reasoning and conversation:
 
 ```bash
-LLM_API_URL=https://medseal-llm.ngrok-free.dev/v1/chat/completions
-LLM_MODEL=med-r1
-LLM_TEMPERATURE=0.3
-LLM_MAX_TOKENS=2048
+# SEA-LION API (primary — powers all agents)
+MEDSEAL_SEALION_API_URL=https://api.sea-lion.ai/v1
+MEDSEAL_SEALION_API_KEY=<your-key>
+MEDSEAL_SEALION_MODEL=aisingapore/Qwen-SEA-LION-v4-32B-IT
+MEDSEAL_SEAGUARD_MODEL=aisingapore/SEA-Guard
+
+# Per-agent temperature tuning
+MEDSEAL_TEMPERATURE_CLINICAL=0.3
+MEDSEAL_TEMPERATURE_COMPANION=0.7
+MEDSEAL_TEMPERATURE_NUDGE=0.6
+MEDSEAL_TEMPERATURE_LIFESTYLE=0.5
+MEDSEAL_TEMPERATURE_INSIGHT=0.2
 ```
 
 See {doc}`features` for the full I/O specification of all 18 features.

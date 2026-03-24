@@ -45,11 +45,11 @@ DataLayer ..> ClinicalLayer : HL7 / SQL
 |---|---|---|
 | Clinical EMR | OpenEMR 7.0.2 | ICD-10, SNOMED CT, HL7 v2 |
 | FHIR API | Medplum Server + App | HL7 FHIR R4 |
-| AI Backend | Node.js / TypeScript | REST, WebSocket |
-| AI Models | med-r1 (via custom LLM API) |  - |
+| AI Backend | Python 3.11 / FastAPI / LangGraph | REST, SSE |
+| AI Models | SEA-LION v4-32B (AI Singapore) |  - |
 | Patient App | Expo / React Native |  - |
 | Auth | PostgreSQL + custom SSO |  - |
-| Infra | Docker Compose |  - |
+| Infra | GCP Cloud Run + GKE |  - |
 
 ## Network Topology
 

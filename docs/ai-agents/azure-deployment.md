@@ -1,6 +1,6 @@
-# AI Agent — Implementation & Azure Deployment
+# AI Agent — Implementation & GCP Cloud Run Deployment
 
-This page documents the implementation architecture and Azure deployment of the **Med-SEAL AI Agent** — the multi-agent clinical reasoning service that powers the platform's 18 smart healthcare features.
+This page documents the implementation architecture and **GCP Cloud Run** deployment of the **Med-SEAL AI Agent** — the multi-agent clinical reasoning service that powers the platform's 18 smart healthcare features.
 
 ---
 
@@ -13,13 +13,14 @@ This page documents the implementation architecture and Azure deployment of the 
 | **Runtime** | Python 3.11 |
 | **Web framework** | FastAPI + Uvicorn |
 | **Agent framework** | LangGraph (LangChain) |
-| **Clinical LLM** | Azure OpenAI — ChatGPT (GPT deployment) |
+| **Clinical LLM** | SEA-LION v4-32B (AI Singapore) |
 | **Conversation model** | SEA-LION v4 (AI Singapore) |
 | **Safety guard** | SEA-Guard (AI Singapore) |
 | **FHIR client** | Medplum (custom `httpx`-based client) |
 | **Session persistence** | SQLite (via `langgraph-checkpoint-sqlite`) |
 | **Containerisation** | Docker (`python:3.11-slim`) |
-| **Cloud hosting** | Azure App Service (Linux, B1 plan) |
+| **Cloud hosting** | GCP Cloud Run (Singapore, `asia-southeast1`) |
+| **Infrastructure** | GKE (`medseal-cluster`) for full stack |
 
 ### 1.2 Agent Roster
 
@@ -42,13 +43,13 @@ Each agent is a compiled LangGraph `StateGraph` with its own tools, system promp
 The system supports two LLM backends via the **LLM Factory** (`agent/core/llm_factory.py`):
 
 ```python
-# config.py — defaults to Azure
+# config.py — defaults to SEA-LION
 clinical_llm_backend: str = "azure"  # or "vllm" for Med-SEAL V1
 ```
 
 | Mode | Backend | Model | When |
 |---|---|---|---|
-| `azure` *(current)* | Azure OpenAI | ChatGPT (GPT) | Demo & deployment — no GPU needed |
+| `azure` *(current)* | SEA-LION v4-32B via API | Qwen-SEA-LION-v4-32B-IT | Production — no GPU needed |
 | `vllm` | Self-hosted vLLM | `med-r1` (Med-SEAL V1) | Future — requires 2× H200 GPU |
 
 Switching is a single env var change: `MEDSEAL_CLINICAL_LLM_BACKEND=vllm`.
@@ -75,9 +76,8 @@ Switching is a single env var change: `MEDSEAL_CLINICAL_LLM_BACKEND=vllm`.
 
 | Service | Endpoint | Purpose |
 |---|---|---|
-| **Azure OpenAI** | `*.cognitiveservices.azure.com` | Clinical reasoning LLM |
-| **SEA-LION API** | `api.sea-lion.ai/v1` | Conversation + Guard |
-| **Medplum FHIR** | `medseal-fhir.ngrok-free.dev/fhir/R4` | Patient health records |
+| **SEA-LION API** | `api.sea-lion.ai/v1` | Clinical reasoning + Conversation + Guard |
+| **Medplum FHIR** | `fhir.medseal.34.54.226.15.nip.io/fhir/R4` | Patient health records (GKE) |
 
 ---
 
@@ -101,7 +101,7 @@ agent/
 ├── core/
 │   ├── orchestrator.py          # Intent classification + agent routing
 │   ├── guard.py                 # SEA-LION Guard (input/output safety)
-│   ├── llm_factory.py           # Azure / vLLM backend selector
+│   ├── llm_factory.py           # SEA-LION / vLLM backend selector
 │   ├── graph.py                 # Legacy agent graph
 │   ├── identity.py              # Agent identity definitions
 │   ├── language.py              # Language detection
@@ -121,37 +121,30 @@ agent/
 
 ---
 
-## 3. Azure Deployment
+## 3. GCP Cloud Run Deployment
 
-### 3.1 Azure Resources
+### 3.1 GCP Resources
 
 | Resource | Type | Configuration |
 |---|---|---|
-| **Resource Group** | `medseal-rg` | East US 2 |
-| **App Service Plan** | `medseal-plan` | Linux, **B1** (Basic) |
-| **Web App** | `medseal-agent` | Python 3.11, via ZIP deploy |
-| **Azure OpenAI** | Cognitive Services | GPT deployment |
+| **Project** | `gen-lang-client-0538005727` | Gemini Project1 |
+| **Cloud Run Service** | `medseal-agent` | `asia-southeast1` (Singapore) |
+| **GKE Cluster** | `medseal-cluster` | 2× `ek-standard-8` nodes |
+| **Artifact Registry** | `cloud-run-source-deploy` | Docker images |
+| **Ingress IP** | `34.54.226.15` | GKE external load balancer |
 
-### 3.2 Environment Variables (App Settings)
-
-Configure these in Azure Portal → Web App → Configuration → Application Settings:
+### 3.2 Environment Variables
 
 ```bash
-# Clinical LLM (Azure OpenAI)
+# Clinical LLM (SEA-LION)
 MEDSEAL_CLINICAL_LLM_BACKEND=azure
-MEDSEAL_AZURE_OPENAI_ENDPOINT=https://<your-resource>.cognitiveservices.azure.com/
-MEDSEAL_AZURE_OPENAI_API_KEY=<your-api-key>
-MEDSEAL_AZURE_OPENAI_DEPLOYMENT=gpt-5.3
-MEDSEAL_AZURE_OPENAI_API_VERSION=2025-04-01-preview
-
-# SEA-LION (conversation + guard)
 MEDSEAL_SEALION_API_URL=https://api.sea-lion.ai/v1
 MEDSEAL_SEALION_API_KEY=<your-sea-lion-key>
 MEDSEAL_SEALION_MODEL=aisingapore/Qwen-SEA-LION-v4-32B-IT
 MEDSEAL_SEAGUARD_MODEL=aisingapore/SEA-Guard
 
-# Medplum FHIR
-MEDSEAL_MEDPLUM_URL=https://medseal-fhir.ngrok-free.dev/fhir/R4
+# Medplum FHIR (GKE)
+MEDSEAL_MEDPLUM_URL=http://fhir.medseal.34.54.226.15.nip.io/fhir/R4
 MEDSEAL_MEDPLUM_EMAIL=admin@example.com
 MEDSEAL_MEDPLUM_PASSWORD=medplum_admin
 
@@ -166,87 +159,55 @@ MEDSEAL_TEMPERATURE=0.6
 uvicorn agent.main:app --host 0.0.0.0 --port 8000
 ```
 
-Set in Azure Portal → Web App → Configuration → General Settings → Startup Command.
-
 ### 3.4 Deployment Steps
 
 #### Prerequisites
-- Azure CLI installed and authenticated (`az login`)
-- Python 3.11+ locally
-- Access to Azure OpenAI resource
+- Google Cloud SDK (`gcloud`) installed and authenticated
+- GCP project with billing enabled
+- Access to SEA-LION API (AI Singapore)
 
-#### Step 1: Create Azure Resources
+#### Step 1: Authenticate & Configure Project
 
 ```bash
-# Login
-az login
-
-# Create resource group
-az group create --name medseal-rg --location eastus2
-
-# Create App Service plan (Linux, Basic tier)
-az appservice plan create \
-  --name medseal-plan \
-  --resource-group medseal-rg \
-  --is-linux \
-  --sku B1
-
-# Create web app
-az webapp create \
-  --name medseal-agent \
-  --resource-group medseal-rg \
-  --plan medseal-plan \
-  --runtime "PYTHON:3.11"
+export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+gcloud auth login --no-launch-browser
+gcloud config set project gen-lang-client-0538005727
 ```
 
-#### Step 2: Configure Environment Variables
+#### Step 2: Enable Required APIs
 
 ```bash
-az webapp config appsettings set \
-  --name medseal-agent \
-  --resource-group medseal-rg \
-  --settings \
-    MEDSEAL_CLINICAL_LLM_BACKEND=azure \
-    MEDSEAL_AZURE_OPENAI_ENDPOINT="https://<your-resource>.cognitiveservices.azure.com/" \
-    MEDSEAL_AZURE_OPENAI_API_KEY="<your-api-key>" \
-    MEDSEAL_AZURE_OPENAI_DEPLOYMENT="gpt-5.3" \
-    MEDSEAL_AZURE_OPENAI_API_VERSION="2025-04-01-preview" \
-    MEDSEAL_SEALION_API_URL="https://api.sea-lion.ai/v1" \
-    MEDSEAL_SEALION_API_KEY="<your-key>" \
-    MEDSEAL_MEDPLUM_URL="https://medseal-fhir.ngrok-free.dev/fhir/R4"
+gcloud services enable \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com
 ```
 
-#### Step 3: Set Startup Command
+#### Step 3: Deploy from Source
 
 ```bash
-az webapp config set \
-  --name medseal-agent \
-  --resource-group medseal-rg \
-  --startup-file "uvicorn agent.main:app --host 0.0.0.0 --port 8000"
+gcloud run deploy medseal-agent \
+  --source /path/to/Med-SEAL \
+  --region asia-southeast1 \
+  --port 8000 \
+  --memory 1Gi \
+  --cpu 1 \
+  --timeout 60 \
+  --allow-unauthenticated \
+  --set-env-vars="\
+MEDSEAL_SEALION_API_KEY=<key>,\
+MEDSEAL_MEDPLUM_URL=http://fhir.medseal.34.54.226.15.nip.io/fhir/R4" \
+  --quiet
 ```
 
-#### Step 4: Deploy via ZIP
+#### Step 4: Verify
 
 ```bash
-# Create deployment ZIP (slim — agent code + requirements only)
-zip -r deploy.zip agent/ requirements_deploy.txt
-
-# Deploy
-az webapp deploy \
-  --name medseal-agent \
-  --resource-group medseal-rg \
-  --src-path deploy.zip \
-  --type zip
-```
-
-#### Step 5: Verify
-
-```bash
-# Check logs
-az webapp log tail --name medseal-agent --resource-group medseal-rg
-
 # Health check
-curl https://medseal-agent.azurewebsites.net/health
+curl https://medseal-agent-74997794842.asia-southeast1.run.app/health
+
+# List agents
+curl https://medseal-agent-74997794842.asia-southeast1.run.app/agents
 ```
 
 Expected health response:
@@ -260,11 +221,9 @@ Expected health response:
 }
 ```
 
-> `vllm: unreachable` is expected — Med-SEAL V1 (`med-r1`) is not deployed. The system uses Azure OpenAI instead.
+> `vllm: unreachable` is expected — Med-SEAL V1 (`med-r1`) is not deployed. The system uses SEA-LION via API instead.
 
-### 3.5 Dockerfile (Alternative Deployment)
-
-The project also includes a Dockerfile for container-based deployment:
+### 3.5 Dockerfile
 
 ```dockerfile
 FROM python:3.11-slim
@@ -285,15 +244,6 @@ ENV PYTHONPATH=/app
 EXPOSE 8000
 
 CMD ["uvicorn", "agent.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-Deploy as a container via Azure Container Apps or Azure Web App for Containers:
-
-```bash
-# Build and push
-docker build -t medseal-agent .
-docker tag medseal-agent <your-acr>.azurecr.io/medseal-agent:latest
-docker push <your-acr>.azurecr.io/medseal-agent:latest
 ```
 
 ### 3.6 Requirements (Deployment)
@@ -324,7 +274,7 @@ Training dependencies (PyTorch, transformers, datasets, etc.) are excluded to ke
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Azure App Service (B1)                    │
+│              GCP Cloud Run (asia-southeast1)                 │
 │                                                             │
 │  ┌────────────────────────────────────────────────────────┐ │
 │  │              FastAPI (uvicorn :8000)                    │ │
@@ -346,9 +296,10 @@ Training dependencies (PyTorch, transformers, datasets, etc.) are excluded to ke
 └─────────┬──────────────────┬──────────────────┬─────────────┘
           │                  │                  │
     ┌─────▼─────┐    ┌──────▼──────┐    ┌──────▼──────┐
-    │Azure OpenAI│    │  SEA-LION   │    │   Medplum   │
-    │ ChatGPT    │    │ api.sea-lion│    │  FHIR R4    │
-    │(clinical)  │    │ .ai/v1     │    │ (ngrok)     │
+    │ SEA-LION   │    │  SEA-Guard  │    │   Medplum   │
+    │ v4-32B     │    │ Safety LLM  │    │  FHIR R4    │
+    │(clinical + │    │ api.sea-lion│    │ (GKE)       │
+    │ companion) │    │ .ai/v1      │    │             │
     └────────────┘    └─────────────┘    └─────────────┘
 ```
 
@@ -359,43 +310,62 @@ Training dependencies (PyTorch, transformers, datasets, etc.) are excluded to ke
 ### 5.1 Logs
 
 ```bash
-# Stream live logs
-az webapp log tail --name medseal-agent --resource-group medseal-rg
+# Cloud Run logs
+gcloud run services logs read medseal-agent --region asia-southeast1 --limit 50
 
-# Download log files
-az webapp log download --name medseal-agent --resource-group medseal-rg
+# GKE pod logs
+kubectl logs -n medseal deployment/ai-service --tail=50
 ```
 
 ### 5.2 Common Issues
 
 | Issue | Cause | Fix |
 |---|---|---|
-| `vllm: unreachable` in health | Expected — Med-SEAL V1 not deployed | No action; Azure OpenAI handles clinical LLM |
-| `STARTUP FAILED — running in degraded mode` | Missing env vars or API key issues | Check `MEDSEAL_*` app settings |
-| `Azure OpenAI not configured` | Missing endpoint/key env vars | Set `MEDSEAL_AZURE_OPENAI_ENDPOINT` and `MEDSEAL_AZURE_OPENAI_API_KEY` |
-| Deployment timeout | ZIP too large or slow build | Use `requirements_deploy.txt` (slim), not full `requirements.txt` |
+| `vllm: unreachable` in health | Expected — Med-SEAL V1 not deployed | No action; SEA-LION handles clinical LLM |
+| `medplum: unreachable` | GKE FHIR server down or URL misconfigured | Check GKE pods: `kubectl get pods -n medseal` |
+| `STARTUP FAILED — running in degraded mode` | Missing env vars or API key issues | Check `MEDSEAL_*` env vars in Cloud Run |
+| `SEA-LION API timeout` | Rate limit or network issue | Retry; check SEA-LION API status |
 | `SQLite checkpointer unavailable` | File permission or dependency issue | Falls back to in-memory MemorySaver; sessions won't persist across restarts |
 
 ### 5.3 Scaling
 
-The B1 plan provides 1 core / 1.75 GB RAM. For higher load:
+Cloud Run auto-scales based on traffic. To adjust limits:
 
 ```bash
-# Scale up to S1 (Standard)
-az appservice plan update --name medseal-plan --resource-group medseal-rg --sku S1
+# Update CPU/memory
+gcloud run services update medseal-agent \
+  --region asia-southeast1 \
+  --cpu 2 \
+  --memory 2Gi
 
-# Scale out (multiple instances)
-az webapp scale --name medseal-agent --resource-group medseal-rg --instance-count 2
+# Set max instances
+gcloud run services update medseal-agent \
+  --region asia-southeast1 \
+  --max-instances 10
 ```
 
 > **Note:** When scaling to multiple instances, switch session persistence from SQLite to Redis (`MEDSEAL_REDIS_URL`) since SQLite is per-instance.
 
 ---
 
-## 6. Related Pages
+## 6. Live Deployment URLs
+
+| Service | URL | Platform |
+|---|---|---|
+| **AI Agent (API)** | `https://medseal-agent-74997794842.asia-southeast1.run.app` | Cloud Run |
+| **Swagger UI** | `https://medseal-agent-74997794842.asia-southeast1.run.app/docs` | Cloud Run |
+| **Patient App** | `app.medseal.34.54.226.15.nip.io` | GKE |
+| **FHIR Server** | `fhir.medseal.34.54.226.15.nip.io` | GKE |
+| **OpenEMR** | `emr.medseal.34.54.226.15.nip.io` | GKE |
+| **Medplum Admin** | `medplum.medseal.34.54.226.15.nip.io` | GKE |
+
+---
+
+## 7. Related Pages
 
 - {doc}`../technical-report-v1` — Med-SEAL V1 base model (`med-r1`) technical report
 - {doc}`overview` — Multi-agent roster and orchestration
 - {doc}`../architecture` — Full system architecture
+- {doc}`gcp-deployment` — Detailed GCP deployment guide
 - {doc}`../developer-guide/api-reference` — REST API reference
 - {doc}`../developer-guide/environment-setup` — Local development setup
