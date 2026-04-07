@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="433px" preserveAspectRatio="none" style="width:1803px;height:433px;" version="1.1" viewBox="0 0 1803 433" width="1803px" zoomAndPan="magnify"><defs><filter height="300%" id="fqftm1iwjaknn" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[edf67fa977962d1f7bf55342aea10f30]
+class BaseAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="91.1875" id="BaseAgent" style="stroke: #A80036; stroke-width: 1.5;" width="249" x="735.5" y="163"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="67" x="826.5" y="179.1387">BaseAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="736.5" x2="983.5" y1="186.9688" y2="186.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="87" x="741.5" y="201.1792">agentId : string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="80" x="741.5" y="213.9839">model : string</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="736.5" x2="983.5" y1="220.5781" y2="220.5781"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="237" x="741.5" y="234.7886">+process(input: AgentInput): AgentOutput</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="212" x="741.5" y="247.5933">+readFHIR(query: FHIRQuery): Bundle</text><!--MD5=[23790c596867f1e0eb10307f0837b37e]
+class CompanionAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="91.1875" id="CompanionAgent" style="stroke: #A80036; stroke-width: 1.5;" width="232" x="6" y="331"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="107" x="68.5" y="347.1387">CompanionAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="237" y1="354.9688" y2="354.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="97" x="12" y="369.1792">language : string</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="7" x2="237" y1="375.7734" y2="375.7734"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="189" x="12" y="389.9839">+chat(message, patientId): Reply</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="184" x="12" y="402.7886">+rephrase(technicalText): string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="220" x="12" y="415.5933">+deliverPRO(questionnaire): Response</text><!--MD5=[5c25c4eb65dee3ec0ee0d2164cc3b0f8]
+class ClinicalReasoningAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="65.5781" id="ClinicalReasoningAgent" style="stroke: #A80036; stroke-width: 1.5;" width="304" x="273" y="343.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="146" x="352" y="359.6387">ClinicalReasoningAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="274" x2="576" y1="367.4688" y2="367.4688"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="274" x2="576" y1="375.4688" y2="375.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="292" x="279" y="389.6792">+analyse(conditions, meds, obs): ClinicalResponse</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="209" x="279" y="402.4839">+checkInteractions(meds): Warning[]</text><!--MD5=[1256dee21f0d55ec6653e0568ed9f2d1]
+class NudgeAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="78.3828" id="NudgeAgent" style="stroke: #A80036; stroke-width: 1.5;" width="213" x="612.5" y="337.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="78" x="680" y="353.6387">NudgeAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="613.5" x2="824.5" y1="361.4688" y2="361.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="134" x="618.5" y="375.6792">ruleEngine : RuleEngine</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="613.5" x2="824.5" y1="382.2734" y2="382.2734"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="162" x="618.5" y="396.4839">+evaluate(triggers): Nudge[]</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="201" x="618.5" y="409.2886">+escalate(severity, patientId): Alert</text><!--MD5=[529a8a5b99bece4ce40341e16985eb2c]
+class LifestyleAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="78.3828" id="LifestyleAgent" style="stroke: #A80036; stroke-width: 1.5;" width="281" x="860.5" y="337.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="87" x="957.5" y="353.6387">LifestyleAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="861.5" x2="1140.5" y1="361.4688" y2="361.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="164" x="866.5" y="375.6792">nutritionKB : KnowledgeBase</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="861.5" x2="1140.5" y1="382.2734" y2="382.2734"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="216" x="866.5" y="396.4839">+recommend(diet, conditions): Advice</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="269" x="866.5" y="409.2886">+checkFoodInteractions(meds, food): Warning[]</text><!--MD5=[87f9a35e4111991a9e7727360c7af541]
+class InsightSynthesisAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="78.3828" id="InsightSynthesisAgent" style="stroke: #A80036; stroke-width: 1.5;" width="320" x="1177" y="337.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="139" x="1267.5" y="353.6387">InsightSynthesisAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1178" x2="1496" y1="361.4688" y2="361.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="133" x="1183" y="375.6792">lookbackDays : number</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="1178" x2="1496" y1="382.2734" y2="382.2734"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="223" x="1183" y="396.4839">+generateBrief(patientId): Composition</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="308" x="1183" y="409.2886">+synthesise(adherence, biometrics, PROs): Summary</text><!--MD5=[5d6af2781631291d36adb6a24da6ef86]
+class MeasurementAgent--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="78.3828" id="MeasurementAgent" style="stroke: #A80036; stroke-width: 1.5;" width="260" x="1532" y="337.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="123" x="1600.5" y="353.6387">MeasurementAgent</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1533" x2="1791" y1="361.4688" y2="361.4688"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="1533" x2="1791" y1="369.4688" y2="369.4688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="216" x="1538" y="383.6792">+computePDC(meds, admin): number</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="247" x="1538" y="396.4839">+computeTrends(observations): TrendData</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="248" x="1538" y="409.2886">+generateMeasureReport(): MeasureReport</text><!--MD5=[563d395c55e2b6ea5a801343ededf82d]
+class SEALIONGuard--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="78.3828" id="SEALIONGuard" style="stroke: #A80036; stroke-width: 1.5;" width="232" x="523" y="8"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="89" x="594.5" y="24.1387">SEALIONGuard</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="524" x2="754" y1="31.9688" y2="31.9688"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="524" x2="754" y1="39.9688" y2="39.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="210" x="529" y="54.1792">+checkInput(content): GuardDecision</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="220" x="529" y="66.9839">+checkOutput(content): GuardDecision</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="128" x="529" y="79.7886">+redactPII(text): string</text><!--MD5=[b2b60b6e21e1c1ac6b961030f3d29f2d]
+class Orchestrator--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="65.5781" id="Orchestrator" style="stroke: #A80036; stroke-width: 1.5;" width="165" x="790.5" y="14"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="80" x="833" y="30.1387">Orchestrator</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="791.5" x2="954.5" y1="37.9688" y2="37.9688"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="791.5" x2="954.5" y1="45.9688" y2="45.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="153" x="796.5" y="60.1792">+classify(message): Intent</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="148" x="796.5" y="72.9839">+route(intent): BaseAgent</text><!--MD5=[f393d183639ca319a12542d7cded933c]
+class GuardDecision--><rect fill="#FEFECE" filter="url(#fqftm1iwjaknn)" height="91.1875" id="GuardDecision" style="stroke: #A80036; stroke-width: 1.5;" width="97" x="590.5" y="163"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="91" x="593.5" y="179.1387">GuardDecision</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="591.5" x2="686.5" y1="186.9688" y2="186.9688"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="30" x="596.5" y="201.1792">PASS</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="28" x="596.5" y="213.9839">FLAG</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="57" x="596.5" y="226.7886">ESCALATE</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="38" x="596.5" y="239.5933">BLOCK</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="591.5" x2="686.5" y1="246.1875" y2="246.1875"/><!--MD5=[9dd2051b45096125b0035a6568ea2c6b]
+reverse link BaseAgent to CompanionAgent--><path d="M715.7,251.49 C712.1,252.36 708.53,253.19 705,254 C507.19,299.18 451.79,281.55 255,331 C249.45,332.39 243.8,333.91 238.11,335.51 " fill="none" id="BaseAgent&lt;-CompanionAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="714,244.7,735.1,246.64,717.4,258.28,714,244.7" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="535" y="297.0669">A1</text><!--MD5=[6360a75d757ed52aabec11e5673563d4]
+reverse link BaseAgent to ClinicalReasoningAgent--><path d="M724.14,261.35 C653.73,288.21 569.97,320.18 509.01,343.44 " fill="none" id="BaseAgent&lt;-ClinicalReasoningAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="721.96,254.68,743.14,254.09,726.95,267.76,721.96,254.68" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="657" y="297.0669">A2</text><!--MD5=[91e34b834afa205961c1de3da37c22de]
+reverse link BaseAgent to NudgeAgent--><path d="M808.69,269.91 C789.57,292.42 768.41,317.33 751.45,337.3 " fill="none" id="BaseAgent&lt;-NudgeAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="803.56,265.13,821.84,254.42,814.23,274.2,803.56,265.13" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="795" y="297.0669">A3</text><!--MD5=[457f86fc288360ca818f31248b61152b]
+reverse link BaseAgent to LifestyleAgent--><path d="M911.31,269.91 C930.43,292.42 951.59,317.33 968.55,337.3 " fill="none" id="BaseAgent&lt;-LifestyleAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="905.77,274.2,898.16,254.42,916.44,265.13,905.77,274.2" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="935" y="297.0669">A4</text><!--MD5=[ec9871b495c2f80cad7c90e09ee60bf6]
+reverse link BaseAgent to InsightSynthesisAgent--><path d="M1003.62,259.48 C1075.52,284.5 1161.16,314.31 1227.63,337.44 " fill="none" id="BaseAgent&lt;-InsightSynthesisAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1001.29,266.08,984.7,252.9,1005.89,252.86,1001.29,266.08" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="1113" y="297.0669">A5</text><!--MD5=[915d3eaff8f11d5599e87a5a0e70e483]
+reverse link BaseAgent to MeasurementAgent--><path d="M1004.58,231.6 C1137.96,253.11 1341.04,288.67 1515,331 C1523.16,332.99 1531.54,335.16 1539.96,337.44 " fill="none" id="BaseAgent&lt;-MeasurementAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1003.25,238.48,984.61,228.4,1005.46,224.66,1003.25,238.48" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="17" x="1373" y="297.0669">A6</text><!--MD5=[cb294c0d4417904e3f4b54d27a529079]
+link Orchestrator to BaseAgent--><path d="M870.37,80.28 C868.55,102.55 866.11,132.59 864.04,157.89 " fill="none" id="Orchestrator-&gt;BaseAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="863.64,162.88,868.3469,154.2287,864.0399,157.896,860.3726,153.5889,863.64,162.88" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="58" x="869" y="129.0669">routes to</text><!--MD5=[1681ee615042cb8b6d31e95392b7ba66]
+link SEALIONGuard to BaseAgent--><path d="M691.65,86 C722.2,108.05 760.96,136.02 793.59,159.57 " fill="none" id="SEALIONGuard-&gt;BaseAgent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="797.94,162.71,792.9979,154.1909,793.8908,159.7768,788.3048,160.6696,797.94,162.71" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="37" x="758" y="129.0669">wraps</text><!--MD5=[61b956fad7e38b03bdcd6c9f3ff9e2b6]
+link SEALIONGuard to GuardDecision--><path d="M639,86.2 C639,107.62 639,134.59 639,157.66 " fill="none" id="SEALIONGuard-&gt;GuardDecision" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="639,162.82,643,153.82,639,157.82,635,153.82,639,162.82" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="640" y="129.0669">returns</text><!--MD5=[8027351a211d2db78dddbfca8b94e35e]
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+abstract class BaseAgent {
+  agentId : string
+  model : string
+  - -
+  +process(input: AgentInput): AgentOutput
+  +readFHIR(query: FHIRQuery): Bundle
+}
+
+class CompanionAgent {
+  language : string
+  - -
+  +chat(message, patientId): Reply
+  +rephrase(technicalText): string
+  +deliverPRO(questionnaire): Response
+}
+
+class ClinicalReasoningAgent {
+  - -
+  +analyse(conditions, meds, obs): ClinicalResponse
+  +checkInteractions(meds): Warning[]
+}
+
+class NudgeAgent {
+  ruleEngine : RuleEngine
+  - -
+  +evaluate(triggers): Nudge[]
+  +escalate(severity, patientId): Alert
+}
+
+class LifestyleAgent {
+  nutritionKB : KnowledgeBase
+  - -
+  +recommend(diet, conditions): Advice
+  +checkFoodInteractions(meds, food): Warning[]
+}
+
+class InsightSynthesisAgent {
+  lookbackDays : number
+  - -
+  +generateBrief(patientId): Composition
+  +synthesise(adherence, biometrics, PROs): Summary
+}
+
+class MeasurementAgent {
+  - -
+  +computePDC(meds, admin): number
+  +computeTrends(observations): TrendData
+  +generateMeasureReport(): MeasureReport
+}
+
+class SEALIONGuard {
+  - -
+  +checkInput(content): GuardDecision
+  +checkOutput(content): GuardDecision
+  +redactPII(text): string
+}
+
+class Orchestrator {
+  - -
+  +classify(message): Intent
+  +route(intent): BaseAgent
+}
+
+enum GuardDecision {
+  PASS
+  FLAG
+  ESCALATE
+  BLOCK
+}
+
+BaseAgent <|- - CompanionAgent : A1
+BaseAgent <|- - ClinicalReasoningAgent : A2
+BaseAgent <|- - NudgeAgent : A3
+BaseAgent <|- - LifestyleAgent : A4
+BaseAgent <|- - InsightSynthesisAgent : A5
+BaseAgent <|- - MeasurementAgent : A6
+
+Orchestrator - -> BaseAgent : routes to
+SEALIONGuard - -> BaseAgent : wraps
+SEALIONGuard ..> GuardDecision : returns
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 17.0.18+8
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

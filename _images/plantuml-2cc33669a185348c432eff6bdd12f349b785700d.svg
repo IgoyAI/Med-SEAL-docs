@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="548px" preserveAspectRatio="none" style="width:656px;height:548px;" version="1.1" viewBox="0 0 656 548" width="656px" zoomAndPan="magnify"><defs><filter height="300%" id="firo84d3szqcw" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[0588807c6c12fd6784279f63713e7e47]
+class SSOUser--><rect fill="#FEFECE" filter="url(#firo84d3szqcw)" height="155.2109" id="SSOUser" style="stroke: #A80036; stroke-width: 1.5;" width="230" x="281.5" y="8"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="61" x="366" y="24.1387">sso.users</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="282.5" x2="510.5" y1="31.9688" y2="31.9688"/><ellipse cx="292.5" cy="42.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="92" x="301.5" y="46.1792">id : SERIAL «PK»</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="282.5" x2="510.5" y1="52.7734" y2="52.7734"/><ellipse cx="292.5" cy="63.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="204" x="301.5" y="66.9839">username : VARCHAR(64) «UNIQUE»</text><ellipse cx="292.5" cy="76.5781" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="182" x="301.5" y="79.7886">password_hash : VARCHAR(255)</text><ellipse cx="292.5" cy="89.3828" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="107" x="301.5" y="92.5933">role : VARCHAR(32)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="147" x="301.5" y="105.3979">full_name : VARCHAR(128)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="123" x="301.5" y="118.2026">email : VARCHAR(128)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="143" x="301.5" y="131.0073">facility_id : INTEGER «FK»</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="136" x="301.5" y="143.812">created_at : TIMESTAMP</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="139" x="301.5" y="156.6167">updated_at : TIMESTAMP</text><!--MD5=[648e71fd458d2162e7bec3ef33c53d99]
+class OEUser--><rect fill="#FEFECE" filter="url(#firo84d3szqcw)" height="116.7969" id="OEUser" style="stroke: #A80036; stroke-width: 1.5;" width="237" x="6" y="240"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="95" x="77" y="256.1387">openemr.users</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="242" y1="263.9688" y2="263.9688"/><ellipse cx="17" cy="274.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="92" x="26" y="278.1792">id : BIGINT «PK»</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="7" x2="242" y1="284.7734" y2="284.7734"/><ellipse cx="17" cy="295.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="211" x="26" y="298.9839">username : VARCHAR(255) «UNIQUE»</text><ellipse cx="17" cy="308.5781" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="148" x="26" y="311.7886">password : VARCHAR(255)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="149" x="26" y="324.5933">abook_type : VARCHAR(30)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="114" x="26" y="337.3979">authorized : TINYINT</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="82" x="26" y="350.2026">facility_id : INT</text><!--MD5=[e5e94e12e6a36a69a70ac8fea2eec8f5]
+class OESecure--><rect fill="#FEFECE" filter="url(#firo84d3szqcw)" height="91.1875" id="OESecure" style="stroke: #A80036; stroke-width: 1.5;" width="237" x="278" y="253"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="144" x="324.5" y="269.1387">openemr.users_secure</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="279" x2="514" y1="276.9688" y2="276.9688"/><ellipse cx="289" cy="287.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="92" x="298" y="291.1792">id : BIGINT «PK»</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="279" x2="514" y1="297.7734" y2="297.7734"/><ellipse cx="289" cy="308.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="211" x="298" y="311.9839">username : VARCHAR(255) «UNIQUE»</text><ellipse cx="289" cy="321.5781" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="148" x="298" y="324.7886">password : VARCHAR(255)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="195" x="298" y="337.5933">last_update_password : DATETIME</text><!--MD5=[3e49f4803b554c92c0b70fce4d7094e5]
+class Facility--><rect fill="#FEFECE" filter="url(#firo84d3szqcw)" height="103.9922" id="Facility" style="stroke: #A80036; stroke-width: 1.5;" width="152" x="278.5" y="434"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="99" x="305" y="450.1387">openemr.facility</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="279.5" x2="429.5" y1="457.9688" y2="457.9688"/><ellipse cx="289.5" cy="468.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="72" x="298.5" y="472.1792">id : INT «PK»</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="279.5" x2="429.5" y1="478.7734" y2="478.7734"/><ellipse cx="289.5" cy="489.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="124" x="298.5" y="492.9839">name : VARCHAR(255)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="120" x="298.5" y="505.7886">phone : VARCHAR(30)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="126" x="298.5" y="518.5933">street : VARCHAR(255)</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="111" x="298.5" y="531.3979">city : VARCHAR(255)</text><!--MD5=[4fd2a37125c86597291a802ce5447b0a]
+link SSOUser to OEUser--><path d="M358.17,171.41 C358.17,171.41 358.17,247 358.17,247 C358.17,247 251.04,247 251.04,247 " fill="none" id="SSOUser-OEUser" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.04" x2="243.04" y1="247" y2="253"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.04" x2="243.04" y1="247" y2="241"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.04" x2="243.04" y1="247" y2="247"/><ellipse cx="257.04" cy="247" fill="none" rx="4" ry="4" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="354.17" x2="362.17" y1="167.41" y2="167.41"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="354.17" x2="362.17" y1="170.41" y2="170.41"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="358.17" x2="358.17" y1="171.41" y2="163.41"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="108" x="186.5" y="206.0669">sync (username)</text><!--MD5=[c2035a0340d72c806da88d42fa9e6b8e]
+link SSOUser to OESecure--><path d="M434.83,171 C434.83,171 434.83,244.97 434.83,244.97 " fill="none" id="SSOUser-OESecure" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="434.83" x2="440.83" y1="244.97" y2="252.97"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="434.83" x2="428.83" y1="244.97" y2="252.97"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="434.83" x2="434.83" y1="244.97" y2="252.97"/><ellipse cx="434.83" cy="238.97" fill="none" rx="4" ry="4" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="430.83" x2="438.83" y1="167" y2="167"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="430.83" x2="438.83" y1="170" y2="170"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="434.83" x2="434.83" y1="171" y2="163"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="103" x="397.5" y="206.0669">sync (password)</text><!--MD5=[ce4882eedbb8444d8c100636e8bef70a]
+link SSOUser to Facility--><path d="M273.45,86 C273.45,86 260.5,86 260.5,86 C260.5,86 260.5,486 260.5,486 C260.5,486 270.18,486 270.18,486 " fill="none" id="SSOUser-Facility" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="274.18" x2="274.18" y1="482" y2="490"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="271.18" x2="271.18" y1="482" y2="490"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="270.18" x2="278.18" y1="486" y2="486"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273.45" x2="281.45" y1="86" y2="80"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273.45" x2="281.45" y1="86" y2="92"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="273.45" x2="281.45" y1="86" y2="86"/><ellipse cx="267.45" cy="86" fill="none" rx="4" ry="4" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="58" x="586.5" y="303.0669">facility_id</text><!--MD5=[f2413c87b4b79efeeecf9bd87526fc7a]
+link OEUser to Facility--><path d="M251.21,351 C251.21,351 354.5,351 354.5,351 C354.5,351 354.5,425.81 354.5,425.81 " fill="none" id="OEUser-Facility" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="358.5" x2="350.5" y1="429.81" y2="429.81"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="358.5" x2="350.5" y1="426.81" y2="426.81"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="354.5" x2="354.5" y1="425.81" y2="433.81"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.21" x2="243.21" y1="351" y2="357"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.21" x2="243.21" y1="351" y2="345"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="251.21" x2="243.21" y1="351" y2="351"/><ellipse cx="257.21" cy="351" fill="none" rx="4" ry="4" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="58" x="314.5" y="400.0669">facility_id</text><!--MD5=[95503a2040f5a0fc544897d76bd6ebaa]
+@startuml
+skinparam linetype ortho
+hide circle
+
+entity "sso.users" as SSOUser {
+  * id : SERIAL <<PK>>
+  - -
+  * username : VARCHAR(64) <<UNIQUE>>
+  * password_hash : VARCHAR(255)
+  * role : VARCHAR(32)
+  full_name : VARCHAR(128)
+  email : VARCHAR(128)
+  facility_id : INTEGER <<FK>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "openemr.users" as OEUser {
+  * id : BIGINT <<PK>>
+  - -
+  * username : VARCHAR(255) <<UNIQUE>>
+  * password : VARCHAR(255)
+  abook_type : VARCHAR(30)
+  authorized : TINYINT
+  facility_id : INT
+}
+
+entity "openemr.users_secure" as OESecure {
+  * id : BIGINT <<PK>>
+  - -
+  * username : VARCHAR(255) <<UNIQUE>>
+  * password : VARCHAR(255)
+  last_update_password : DATETIME
+}
+
+entity "openemr.facility" as Facility {
+  * id : INT <<PK>>
+  - -
+  * name : VARCHAR(255)
+  phone : VARCHAR(30)
+  street : VARCHAR(255)
+  city : VARCHAR(255)
+}
+
+SSOUser ||- -o{ OEUser : "sync (username)"
+SSOUser ||- -o{ OESecure : "sync (password)"
+SSOUser }o- -|| Facility : "facility_id"
+OEUser }o- -|| Facility : "facility_id"
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 17.0.18+8
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
